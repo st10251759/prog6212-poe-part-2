@@ -25,6 +25,31 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        @* Role-based navigation links *@
+                        @if (User.IsInRole("Lecturer"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="Submit">Submit a Claim</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="View">View Claims</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="Track">Track Claims</a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Programme Coordinator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="ApproveReject">Approve/Reject Claims Coordinator</a>
+                            </li>
+                        }
+                        else if (User.IsInRole("Academic Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="ApproveReject">Approve/Reject Claims Manager</a>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div class="navbar-nav ms-auto p-4 p-lg-0">

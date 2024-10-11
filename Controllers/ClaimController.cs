@@ -105,5 +105,19 @@ namespace ST10251759_PROG6212_POE.Controllers
             return RedirectToAction("Dashboard", "Lecturer");
         }
 
+        // GET: Claims/Track
+        public async Task<IActionResult> TrackClaims()
+        {
+            // Get the logged-in user
+            var currentUser = await _userManager.GetUserAsync(User);
+
+            // Fetch claims for the current user
+            var claims = _context.Claims
+                .Where(c => c.ApplicationUserId == currentUser.Id)
+                .ToList();
+
+            return View(claims);
+        }
     }
+
 }
