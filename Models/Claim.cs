@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection.Metadata;
 
 namespace ST10251759_PROG6212_POE.Models
@@ -6,7 +7,6 @@ namespace ST10251759_PROG6212_POE.Models
     public class Claim
     {
         public int ClaimId { get; set; }
-
 
         [Required(ErrorMessage = "Hours Worked is required.")]
         [Range(1, 100, ErrorMessage = "Hours Worked must be between 1 and 100.")]
@@ -16,6 +16,7 @@ namespace ST10251759_PROG6212_POE.Models
         [Range(50, 1000, ErrorMessage = "Hourly Rate must be between 50 and 1000.")]
         public decimal HourlyRate { get; set; }
 
+        // Calculated property for Total Amount
         public decimal TotalAmount => HoursWorked * HourlyRate;
 
         [MaxLength(500, ErrorMessage = "Notes can't exceed 500 characters.")]
@@ -25,12 +26,20 @@ namespace ST10251759_PROG6212_POE.Models
         [CustomValidation(typeof(Claim), nameof(ValidateSubmissionDate))]
         public DateTime DateSubmitted { get; set; }
 
-        // Status
+        // Status of the claim
         public string Status { get; set; } = "Pending";
 
-        // Track approvals
+        // Approval tracking
         public bool IsApprovedByCoordinator { get; set; } = false;
         public bool IsApprovedByManager { get; set; } = false;
+
+        // Link to ApplicationUser
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
+        public virtual ApplicationUser ApplicationUser { get; set; }
+
+        // List of associated documents
+        public virtual ICollection<Document> Documents { get; set; }
 
         // Custom validation for DateSubmitted
         public static ValidationResult ValidateSubmissionDate(DateTime dateSubmitted, ValidationContext context)
