@@ -1,8 +1,79 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClaimStream</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">ClaimStream</h1>
+        <div class="buttons">
+            <a href="/identity/Account/Login" class="login">LOGIN</a>
+            <a href="/identity/Account/Register" class="register">REGISTER</a>
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url('/images/background.png') no-repeat center center fixed;
+        background-size: cover;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+        text-align: center;
+        color: white;
+    }
+
+    .title {
+        font-size: 18em;
+        font-family: 'Brush Script MT', cursive;
+    }
+
+    .buttons {
+        margin-top: 20px;
+        position: relative;
+        bottom: 203px;
+    }
+
+    a {
+        font-size: 4em;
+        padding: 10px 20px;
+        margin: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: 45px;
+        text-decoration: none;
+        display: inline-block;
+        color: white;
+        text-align: center;
+        width: 400px;
+    }
+
+    .login {
+        background-color: #9483c8;
+    }
+
+    .register {
+        background-color: #03041c;
+    }
+
+</style>
