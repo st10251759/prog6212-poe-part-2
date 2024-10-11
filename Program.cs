@@ -7,11 +7,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//Adding DB Context builder services with options
+//Adding DB Context builder services with options with roles
 builder.Services.AddDbContext<Prog6212DbContext>(options =>
            options.UseSqlServer(builder.Configuration.GetConnectionString("Prog6212DEV")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<Prog6212DbContext>();
+//Added service for Authorization for Role based Access
+builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
+               .AddRoles<IdentityRole>()
+               .AddEntityFrameworkStores<Prog6212DbContext>();
 
 var app = builder.Build();
 
@@ -29,6 +32,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",

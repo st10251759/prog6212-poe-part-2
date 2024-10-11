@@ -10,5 +10,7 @@ namespace ST10251759_PROG6212_POE.Data
         {
         }
         public DbSet<ST10251759_PROG6212_POE.Models.Claim> Claim { get; set; } = default!;
+
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
     }
 }
