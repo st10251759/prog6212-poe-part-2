@@ -1,7 +1,14 @@
+using Microsoft.EntityFrameworkCore;
+using ST10251759_PROG6212_POE.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+//Adding DB Context builder services with options
+builder.Services.AddDbContext<Prog6212DbContext>(options =>
+           options.UseSqlServer(builder.Configuration.GetConnectionString("Prog6212DEV")));
 
 var app = builder.Build();
 
