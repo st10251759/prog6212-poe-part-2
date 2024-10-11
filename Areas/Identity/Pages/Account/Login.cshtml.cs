@@ -128,7 +128,7 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
                         // Redirect based on role
                         if (roles.Contains("Lecturer"))
                         {
-                            return LocalRedirect(Url.Content("~/Admin/Dashboard"));
+                            return LocalRedirect(Url.Content("~/Lecturer/Dashboard"));
                         }
                         else if (roles.Contains("Programme Coordinator"))
                         {

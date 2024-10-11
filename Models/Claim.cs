@@ -16,8 +16,9 @@ namespace ST10251759_PROG6212_POE.Models
         [Range(50, 1000, ErrorMessage = "Hourly Rate must be between 50 and 1000.")]
         public decimal HourlyRate { get; set; }
 
-        // Calculated property for Total Amount
-        public decimal TotalAmount => HoursWorked * HourlyRate;
+        // Stored property for Total Amount
+        [Required]
+        public decimal TotalAmount { get; set; }
 
         [MaxLength(500, ErrorMessage = "Notes can't exceed 500 characters.")]
         public string Notes { get; set; }

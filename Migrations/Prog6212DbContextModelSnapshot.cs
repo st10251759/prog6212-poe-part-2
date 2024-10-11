@@ -269,6 +269,9 @@ namespace ST10251759_PROG6212_POE.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("TotalAmount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("ClaimId");
 
                     b.HasIndex("ApplicationUserId");

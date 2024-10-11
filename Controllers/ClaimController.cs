@@ -31,68 +31,78 @@ namespace ST10251759_PROG6212_POE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ClaimViewModel model)
         {
-            if (ModelState.IsValid)
+            // Validate model state
+            if (!ModelState.IsValid)
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                // Create new claim
-                var claim = new Claim
-                {
-                    HoursWorked = model.HoursWorked,
-                    HourlyRate = model.HourlyRate,
-                    Notes = model.Notes,
-                    DateSubmitted = DateTime.Now,
-                    ApplicationUserId = user.Id
-                };
-
-                _context.Claims.Add(claim);
-                await _context.SaveChangesAsync();
-
-                // Handle file upload if provided
-                if (model.SupportingDocuments != null && model.SupportingDocuments.Count > 0)
-                {
-                    foreach (var file in model.SupportingDocuments)
-                    {
-                        // Validate file type and size
-                        if (file.ContentType != "application/pdf" || file.Length > 15 * 1024 * 1024)
-                        {
-                            ModelState.AddModelError("", "Only PDF files under 15 MB are allowed.");
-                            return View(model);
-                        }
-
-                        var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                        // Ensure directory exists
-                        Directory.CreateDirectory(uploadsFolder);
-
-                        // Save file
-                        using (var fileStream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await file.CopyToAsync(fileStream);
-                        }
-
-                        // Create document entry and link it to the claim
-                        var document = new Document
-                        {
-                            ClaimId = claim.ClaimId,
-                            DocumentName = uniqueFileName,
-                            FilePath = filePath
-                        };
-
-                        _context.Documents.Add(document);
-                    }
-
-                    await _context.SaveChangesAsync();
-                }
-
-                TempData["SuccessMessage"] = "Claim submitted successfully!";
-                return RedirectToAction("Index", "Dashboard");
+                return View(model);
             }
 
-            // If we got this far, something failed; redisplay form with validation errors
-            return View(model);
+            // Validate supporting documents
+            if (model.SupportingDocuments == null || model.SupportingDocuments.Count == 0)
+            {
+                ModelState.AddModelError("", "At least one supporting document must be attached.");
+                return View(model);
+            }
+
+            // Validate file types and sizes
+            foreach (var file in model.SupportingDocuments)
+            {
+                if (file.ContentType != "application/pdf" || file.Length > 15 * 1024 * 1024)
+                {
+                    ModelState.AddModelError("", "Only PDF files under 15 MB are allowed.");
+                    return View(model);
+                }
+            }
+
+            // If the model is valid and documents are valid, proceed to create the claim
+            var user = await _userManager.GetUserAsync(User);
+
+            var claim = new Claim
+            {
+                HoursWorked = model.HoursWorked,
+                HourlyRate = model.HourlyRate,
+                Notes = model.Notes,
+                DateSubmitted = DateTime.Now,
+                ApplicationUserId = user.Id,
+                TotalAmount = model.HourlyRate * model.HoursWorked
+            };
+
+            _context.Claims.Add(claim);
+            await _context.SaveChangesAsync();
+
+            // Handle file upload
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+
+            foreach (var file in model.SupportingDocuments)
+            {
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Ensure directory exists
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Save file
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+
+                // Create document entry and link it to the claim
+                var document = new Document
+                {
+                    ClaimId = claim.ClaimId,
+                    DocumentName = uniqueFileName,
+                    FilePath = filePath
+                };
+
+                _context.Documents.Add(document);
+            }
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Claim submitted successfully!";
+            return RedirectToAction("Dashboard", "Lecturer");
         }
+
     }
 }
