@@ -65,6 +65,7 @@ namespace ST10251759_PROG6212_POE.Controllers
                 DateSubmitted = DateTime.Now,
                 ApplicationUserId = user.Id,
                 TotalAmount = model.HourlyRate * model.HoursWorked
+
             };
 
             _context.Claims.Add(claim);

@@ -132,11 +132,11 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
                         }
                         else if (roles.Contains("Programme Coordinator"))
                         {
-                            return LocalRedirect(Url.Content("~/Manager/Home"));
+                            return LocalRedirect(Url.Content("~/ProgrammeCoordinator/Index"));
                         }
                         else if (roles.Contains("Academic Manager"))
                         {
-                            return LocalRedirect(Url.Content("~/User/Home"));
+                            return LocalRedirect(Url.Content("~/AcademicManager/Index"));
                         }
                     }
 
