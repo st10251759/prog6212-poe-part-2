@@ -22,32 +22,29 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
                         @* Role-based navigation links *@
                         @if (User.IsInRole("Lecturer"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="Submit">Submit a Claim</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Lecturer" asp-action="Dashboard">Lecturer Dashboard</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="View">View Claims</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claim" asp-action="Create">Submit a Claim</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="Track">Track Claims</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Claim" asp-action="TrackClaims">Track Claims</a>
                             </li>
                         }
                         else if (User.IsInRole("Programme Coordinator"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="ApproveReject">Approve/Reject Claims Coordinator</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ProgrammeCoordinator" asp-action="Index">Approve/Reject Claims Coordinator</a>
                             </li>
                         }
                         else if (User.IsInRole("Academic Manager"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Claims" asp-action="ApproveReject">Approve/Reject Claims Manager</a>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="AcademicManager" asp-action="Index">Approve/Reject Claims Manager</a>
                             </li>
                         }
                     </ul>
