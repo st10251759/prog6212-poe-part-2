@@ -4,36 +4,113 @@
     ViewData["Title"] = "Submit Claim";
 }
 
-<h2>Submit Claim</h2>
+<div class="container-claims">
+    <h2>Submit Your Claim</h2>
 
-<form asp-action="Create" enctype="multipart/form-data" method="post">
-    <div class="form-group">
-        <label asp-for="HoursWorked"></label>
-        <input asp-for="HoursWorked" class="form-control" />
-        <span asp-validation-for="HoursWorked" class="text-danger"></span>
-    </div>
+    <form asp-action="Create" enctype="multipart/form-data" method="post">
+        <div class="form-group">
+            <label asp-for="HoursWorked"></label>
+            <input asp-for="HoursWorked" class="form-control" required />
+            <span asp-validation-for="HoursWorked" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="HourlyRate"></label>
-        <input asp-for="HourlyRate" class="form-control" />
-        <span asp-validation-for="HourlyRate" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="HourlyRate"></label>
+            <input asp-for="HourlyRate" class="form-control" required />
+            <span asp-validation-for="HourlyRate" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label asp-for="Notes"></label>
-        <textarea asp-for="Notes" class="form-control"></textarea>
-        <span asp-validation-for="Notes" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label asp-for="Notes"></label>
+            <textarea asp-for="Notes" class="form-control" rows="4" placeholder="Add any additional notes..."></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
 
-    <div class="form-group">
-        <label for="SupportingDocuments">Supporting Documents (PDF only, max 15MB)</label>
-        <input type="file" name="SupportingDocuments" class="form-control" multiple />
-        <span asp-validation-for="SupportingDocuments" class="text-danger"></span>
-    </div>
+        <div class="form-group">
+            <label for="SupportingDocuments">Supporting Documents (PDF only, max 15MB)</label>
+            <input type="file" name="SupportingDocuments" class="form-control" multiple required />
+            <span asp-validation-for="SupportingDocuments" class="text-danger"></span>
+        </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+        <button type="submit" class="btn-claims btn-primary"><i class="fa-solid fa-upload"></i> Submit Claim</button>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #03041c;
+        color: #03041c;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container-claims {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #03041c;
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #03041c;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+        .form-control:focus {
+            border-color: #03041c;
+            outline: none;
+        }
+
+    .btn-claims {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #03041c;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .btn-claims:hover {
+            background-color: #02031a;
+        }
+
+    .text-danger {
+        font-size: 14px;
+        color: #d9534f; /* Bootstrap danger color */
+    }
+</style>
