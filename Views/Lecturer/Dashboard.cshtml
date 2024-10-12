@@ -4,17 +4,17 @@
     <h2>Lecturer Dashboard</h2>
 
     <div class="filter-section">
-        <form method="get">
+        <form method="get" class="filter-form">
             <label for="start-date">Start Date:</label>
-            <input type="date" id="start-date" name="startDate" value="@Context.Request.Query["startDate"]" />
+            <input type="date" id="start-date" name="startDate" value="@Context.Request.Query["startDate"]" class="form-control" />
             <label for="end-date">End Date:</label>
-            <input type="date" id="end-date" name="endDate" value="@Context.Request.Query["endDate"]" />
+            <input type="date" id="end-date" name="endDate" value="@Context.Request.Query["endDate"]" class="form-control" />
             <button type="submit" class="btn-filter">Filter</button>
         </form>
     </div>
 
-    <table class="table">
-        <thead>
+    <table class="table table-hover">
+        <thead class="table-header">
             <tr>
                 <th>Claim ID</th>
                 <th>Date Submitted</th>
@@ -22,7 +22,6 @@
                 <th>Hourly Rate</th>
                 <th>Total Amount</th>
                 <th>Supporting Documents</th>
-                <th>Status</th>
             </tr>
         </thead>
         <tbody>
@@ -37,12 +36,12 @@
                     <td>
                         @if (claim.Documents != null && claim.Documents.Any())
                         {
-                            <ul>
+                            <ul style="list-style-type: none;">
                                 @foreach (var doc in claim.Documents)
                                 {
                                     <li>
                                         <i class="fa-solid fa-download"></i>
-                                        <a href="@Url.Content("~/uploads/" + doc.DocumentName)" target="_blank">View Document</a>
+                                        <a href="@Url.Content("~/uploads/" + doc.DocumentName)" target="_blank" style="text-decoration: none; color: #212529;">View Document</a>
                                     </li>
                                 }
                             </ul>
@@ -52,11 +51,133 @@
                             <span>No Documents</span>
                         }
                     </td>
-                    <td>@claim.Status</td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <a href="/Claim/Create" class="btn-submit"><i class="fa-solid fa-upload"></i> Submit New Claim</a>
+    <div class="action-section">
+        <a href="/Claim/Create" class="btn-submit"><i class="fa-solid fa-upload"></i> Submit New Claim</a>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #03041c;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Container Styling */
+    .container-dashboard {
+        margin: 6rem auto;
+        width: 100%;
+        max-width: 1200px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1rem;
+        font-size: 2rem;
+    }
+
+    /* Filter Section */
+    .filter-section {
+        margin-bottom: 1.5rem;
+        background-color: #f9fafb;
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .filter-form {
+        display: flex;
+        align-items: center; /* Align items vertically */
+        justify-content: flex-start; /* Align items to the left */
+        gap: 10px; /* Space between items */
+    }
+
+    .filter-section label {
+        font-size: 1rem;
+    }
+
+    .form-control {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ced4da;
+        width: 150px; /* Adjust width to fit better */
+    }
+
+    .btn-filter {
+        background-color: #03041c;
+        border: none;
+        padding: 10px 15px;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-filter:hover {
+            background-color: #555;
+        }
+
+    /* Table Styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .table-header {
+        background-color: #f8f9fa;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    /* Action Section */
+    .action-section {
+        text-align: center;
+    }
+
+    .btn-submit {
+        background-color: #03041c;
+        border: none;
+        padding: 12px 20px;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-submit:hover {
+            background-color: #fff;
+            color: #03041c;
+            border: 1px solid #03041c;
+        }
+
+    /* Icons Styling */
+    .fa-download {
+        margin-right: 5px;
+        color: #6c757d;
+    }
+</style>
