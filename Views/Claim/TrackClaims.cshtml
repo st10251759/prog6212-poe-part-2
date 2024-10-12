@@ -1,6 +1,31 @@
 ﻿@model IEnumerable<ST10251759_PROG6212_POE.Models.Claim>
 @{
     ViewBag.Title = "Track Claim Status";
+
+    // Helper methods to determine CSS classes based on status
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Approved by Manager" => "approved",
+            "Rejected by Coordinator" => "rejected",
+            "Rejected by Manager" => "rejected",
+            "Pending" => "pending",
+            _ => "unknown" // Default class for any unexpected status
+        };
+    }
+
+    string GetRowClass(string status)
+    {
+        return status switch
+        {
+            "Approved by Manager" => "text-success",
+            "Rejected by Coordinator" => "text-danger",
+            "Rejected by Manager" => "text-danger",
+            "Pending" => "text-warning",
+            _ => "text-muted" // Default text class
+        };
+    }
 }
 
 <div class="container-claims">
@@ -42,22 +67,18 @@
         <tbody id="claims-table-body">
             @foreach (var claim in Model)
             {
-                <tr data-status="@claim.Status">
+                <tr class="@GetStatusClass(claim.Status)" data-status="@claim.Status">
                     <td>@claim.ClaimId</td>
                     <td>@claim.DateSubmitted.ToString("yyyy/MM/dd")</td>
-                    <td>@claim.Status</td>
+                    <td class="@GetRowClass(claim.Status)">@claim.Status</td>
                     <td>@claim.Notes</td>
                 </tr>
             }
         </tbody>
     </table>
 
-    <a href="/Lecturer/Dashboard" class="btn-submit"><i class="fa-solid fa-house"></i> Back to Dashboard</a>
+    <a href="/Lecturer/Dashboard" class="btn-submit" style="text-decoration:none;"><i class="fa-solid fa-house"></i> Back to Dashboard</a>
 </div>
-
-<style>
-    /* Add your existing CSS styles here, no changes required */
-</style>
 
 <script>
     function filterClaims() {
@@ -75,5 +96,158 @@
                 row.style.display = "none"; // Hide the row
             }
         }
+    }
+</script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #03041c;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container-claims {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h2 {
+        text-align: center;
+        color: #03041c;
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    .status-summary {
+        display: flex;
+        justify-content: space-around;
+        margin-bottom: 20px;
+    }
+
+    .status-item {
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+        width: 30%;
+    }
+
+    .approved {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    .rejected {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .pending {
+        background-color: #fff3cd;
+        color: #856404;
+    }
+
+    .filter-section {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .status-filter {
+        padding: 8px;
+        font-size: 16px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+    }
+
+    .table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            color: #333;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .table td {
+            background-color: #ffffff;
+        }
+
+        .table .approved {
+            color: green; /* Text for Approved status */
+        }
+
+        .table .rejected {
+            color: red; /* Text for Rejected status */
+        }
+
+        .table .pending {
+            color: orangered; /* Text for Pending status */
+        }
+
+    .btn-submit {
+        display: block;
+        width: 200px;
+        margin: 20px auto;
+        padding: 10px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #03041c;
+        color: #ffffff;
+        text-align: center;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .btn-submit:hover {
+            background-color: #fff;
+            color: #03041c;
+            border: 1px solid #03041c;
+        }
+</style>
+
+<script>
+    function filterClaims() {
+        const filterValue = document.getElementById("status-filter").value.toLowerCase();
+        const claimsTable = document.getElementById("claims-table-body");
+        const rows = claimsTable.getElementsByTagName("tr");
+
+        for (let i = 0; i < rows.length; i++) {
+            const row = rows[i];
+            const status = row.getAttribute("data-status").toLowerCase();
+
+            if (filterValue === "all" || status.includes(filterValue)) {
+                row.style.display = ""; // Show the row
+            } else {
+                row.style.display = "none"; // Hide the row
+            }
+        }
+    }
+
+    // Optional: Add a method to determine the class based on the status
+    function GetStatusClass(status) {
+        if (status.includes("Approved by Manager")) return "approved";
+        if (status.includes("Rejected")) return "rejected";
+        if (status.includes("Pending")) return "pending";
+        return "";
     }
 </script>
