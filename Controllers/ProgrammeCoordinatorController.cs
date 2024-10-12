@@ -18,9 +18,9 @@ namespace ST10251759_PROG6212_POE.Controllers
         public IActionResult Index()
         {
             // Only show claims that are pending and not yet approved by the coordinator
-            // Only show claims that are pending and not yet approved by the coordinator
             var pendingClaims = _context.Claims
                 .Include(c => c.ApplicationUser) // Include the ApplicationUser
+                .Include(c => c.Documents) // Include the Documents
                 .Where(c => !c.IsApprovedByCoordinator && c.Status == "Pending")
                 .ToList();
 

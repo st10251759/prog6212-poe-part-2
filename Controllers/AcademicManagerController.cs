@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ST10251759_PROG6212_POE.Data;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,11 +19,14 @@ namespace ST10251759_PROG6212_POE.Controllers
         {
             // Only show claims that are approved by the coordinator but pending manager approval
             var pendingClaims = _context.Claims
-                .Where(c => c.IsApprovedByCoordinator == true && c.IsApprovedByManager == false && c.Status == "Approved by Coordinator")
+                .Include(c => c.ApplicationUser) // Include the ApplicationUser
+                .Include(c => c.Documents) // Include the Documents
+                .Where(c => c.IsApprovedByCoordinator && !c.IsApprovedByManager && c.Status == "Approved by Coordinator")
                 .ToList();
 
             return View(pendingClaims);
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Approve(int claimId)
