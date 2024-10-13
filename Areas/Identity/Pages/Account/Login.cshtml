@@ -6,10 +6,10 @@
 }
 
 <div class="login-container">
-    <h1>Log in</h1>
     <div class="login-box">
         <section class="login-section">
             <form id="account" method="post">
+                <h1>Log in</h1>
                 <h2>Enter your Account Details to Login:</h2>
                 <hr />
                 <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
@@ -58,7 +58,9 @@
     /* Body Styling */
     body {
         font-family: Arial, sans-serif;
-        background-color: #03041c;
+        /* background-color: #03041c; */
+        background: url('/images/temple2.jpg') no-repeat center center fixed;
+        background-size: cover;
         margin: 0;
         padding: 0;
         color: #fff;
