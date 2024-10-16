@@ -105,7 +105,8 @@ namespace ST10251759_PROG6212_POE.Controllers
             bool isInvalidFile = false; //flag variable for invalid file (not a PDF)
             foreach (var file in model.SupportingDocuments)
             {
-                if (file.ContentType != "application/pdf" || file.Length > 15 * 1024 * 1024)
+                // Call the IsValidDocument method to check the validity of the file
+                if (!IsValidDocument(file))
                 {
                     ViewBag.InvalidFile = true; //assign a viewbag variable to true - indicated user is tryinhg to upload an invalid file - this variable in the view willbe used to change the label describing the correct file format to red
                     isInvalidFile = true;
@@ -189,6 +190,22 @@ namespace ST10251759_PROG6212_POE.Controllers
             //pass the list of claims to the view
             return View(claims);
         }
+
+        // Method to validate if the document is a PDF and does not exceed 15 MB - Used in Unit Testing - same functionality as if statement 
+        public bool IsValidDocument(IFormFile file)
+        {
+            // Check if the file is not null
+            if (file == null)
+            {
+                return false;
+            }
+
+            // Validate the file type and size
+            return file.ContentType == "application/pdf" && file.Length <= 15 * 1024 * 1024; // 15 MB
+        }
+
+
+
     }//ClaimController class end
 
 }//namespace end

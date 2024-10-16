@@ -40,13 +40,13 @@ namespace ST10251759_PROG6212_POE.Models // Defining the namespace for the model
         // Property to hold the number of hours worked by the user
         // The Required attribute enforces that this field must be filled out
         [Required(ErrorMessage = "Hours Worked is required.")] // Custom error message if validation fails
-        [Range(1, 100, ErrorMessage = "Hours Worked must be between 1 and 100.")] // Validates that the value must be between 1 and 100
+        [System.ComponentModel.DataAnnotations.Range(1, 150, ErrorMessage = "Hours Worked must be between 1 and 150.")] // Validates that the value must be between 1 and 100
         public decimal HoursWorked { get; set; } // Decimal property for storing hours worked
 
         // Property to hold the user's hourly rate
         // The Required attribute enforces that this field must be filled out
         [Required(ErrorMessage = "Hourly Rate is required.")] // Custom error message if validation fails
-        [Range(50, 1000, ErrorMessage = "Hourly Rate must be between 50 and 1000.")] // Validates that the value must be between 50 and 1000
+        [System.ComponentModel.DataAnnotations.Range(200, 1000, ErrorMessage = "Hourly Rate must be between 200 and 1000.")] // Validates that the value must be between 50 and 1000
         public decimal HourlyRate { get; set; } // Decimal property for storing the hourly rate
 
         // Property to hold additional notes related to the claim

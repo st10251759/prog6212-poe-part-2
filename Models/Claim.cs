@@ -39,14 +39,15 @@ namespace ST10251759_PROG6212_POE.Models // Defining a namespace for the project
         // ClaimId property: a unique identifier for each claim
         public int ClaimId { get; set; }
 
+        //The main assumpt is that Lecturers will enter their Hourly rate, submit supporting documents that verify the hourly rate and Porgramme Coordinators and Academic Managers will verify eveidence - to Aprove and Reject the claim - hence hourly rate is not populated - otis stiputlated to change
         // HoursWorked property: represents the number of hours worked
         [Required(ErrorMessage = "Hours Worked is required.")] // Validation to ensure this field is not empty
-        [Range(1, 100, ErrorMessage = "Hours Worked must be between 1 and 100.")] // Validation to ensure the value is between 1 and 100
+        [System.ComponentModel.DataAnnotations.Range(1, 150, ErrorMessage = "Hours Worked must be between 1 and 150.")] // Validation to ensure the value is between 1 and 100  - It is assumped that Lectures can not work more than 160 hours a month
         public decimal HoursWorked { get; set; }
 
         // HourlyRate property: represents the rate per hour for the claim
         [Required(ErrorMessage = "Hourly Rate is required.")] // Validation to ensure this field is not empty
-        [Range(50, 1000, ErrorMessage = "Hourly Rate must be between 50 and 1000.")] // Validation to ensure the value is between 50 and 1000
+        [System.ComponentModel.DataAnnotations.Range(200, 1000, ErrorMessage = "Hourly Rate must be between 200 and 1000.")] // Validation to ensure the value is between 50 and 1000 - It is assumpted Lecturers Hourly rate is between R200 and R1000 an hour
         public decimal HourlyRate { get; set; }
 
         // TotalAmount property: the total amount to be paid for the claim, calculated from HoursWorked and HourlyRate
