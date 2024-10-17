@@ -62,14 +62,19 @@ ClaimStream is a prototype web application designed to manage lecturer claims wi
 5. Update the connection string in the `appsettings.json` file with your local database configuration.
 
 ## Assumptions for Usage
-- **User Roles:**
-  - **Lecturers:** Can submit claims with supporting documents.
-  - **Programme Coordinators:** Verify and approve/reject claims.
-  - **Academic Managers:** Provide final approval or rejection.
+
+1. **User Roles:**  
+   - There are three types of users: **Lecturers**, **Programme Coordinators**, and **Academic Managers**. Each has unique credentials and access to specific pages.
   
-- **Hourly Rate:** Ranges between R200 and R1000.
-- **Claim Period:** Lecturers can submit claims for either the current or the previous month.
-- **Supporting Documentation:** Lecturers must upload a signed document verifying their hourly rate and contract conditions.
+2. **Lecturer Claim Submission:**  
+   - Lecturers can submit claims with an **hourly rate between R200 and R1000**. They can record **1 to 150 hours** worked in a month.
+  
+3. **Claim Period:**  
+   - Claims can only be submitted for the **current** or **previous month**. Future claims are not allowed.
+
+4. **Supporting Documentation:**  
+   - Lecturers must provide proof of their hourly rate and contract details, verified by a manager or official. This documentation is reviewed by the Programme Coordinator before claims are approved.
+
 
 ## Functionality and App Usage
 
