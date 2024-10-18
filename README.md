@@ -5,15 +5,23 @@ ClaimStream is a prototype web application designed to manage lecturer claims wi
 
 ## Table of Contents
 1. [Overview](#overview)
-2. [Sprints](#sprints)
+2. [Repository Contents](#repository-contents)
+3. [Sprints](#sprints)
    - [Sprint Part 1](#sprint-part-1)
    - [Sprint Part 2](#sprint-part-2)
    - [Sprint Part 3](#sprint-part-3)
-3. [Cloning the Project and Restoring the Database](#cloning-the-project-and-restoring-the-database)
-4. [Assumptions for Usage](#assumptions-for-usage)
-5. [Functionality and App Usage](#functionality-and-app-usage)
-6. [Future Requirements](#future-requirements)
-7. [Code Attribution](#code-attribution)
+4. [Cloning the Project and Restoring the Database](#cloning-the-project-and-restoring-the-database)
+5. [Assumptions for Usage](#assumptions-for-usage)
+6. [Functionality and App Usage](#functionality-and-app-usage)
+7. [Future Requirements](#future-requirements)
+8. [Code Attribution](#code-attribution)
+
+## Repository Contents
+The folllowing files are uploaded into this repository
+- **ST10251759_PROG6212_POE_Tests.zip:** This is the Unit Tests Project with 12 Unit Tests testing the functionality of the app.
+- **Prog6212_DB.bak:** This is the SSMS Database Backup of my local DB
+- **ST10251759 - CAMERON CHETTY - PROG6212 - POE - Part 2.pdf:** This is my submission document with the submission information, screeenshots of app runnning local, code and code attribution.
+- **ST10251759_PROG6212_POE.sln:** This is the solution file and all the folders and files associated with the mvc application
 
 ## Sprints
 
