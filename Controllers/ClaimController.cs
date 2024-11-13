@@ -119,9 +119,11 @@ namespace ST10251759_PROG6212_POE.Controllers
             if (claimExists)
             {
                 ModelState.AddModelError("", "You have already submitted a claim for this month.");
+                ViewData["ClaimExists"] = true; // Set flag for jQuery
                 return View(model);
             }
 
+            // File validation
             if (model.SupportingDocuments == null || model.SupportingDocuments.Count == 0)
             {
                 ModelState.AddModelError("", "At least one supporting document must be attached.");
@@ -185,6 +187,7 @@ namespace ST10251759_PROG6212_POE.Controllers
 
             return View(model);
         }
+
 
 
         // GET: Claims/Track

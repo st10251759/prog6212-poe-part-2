@@ -53,31 +53,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#SupportingDocuments').on('change', function () {
-                let maxFileSize = 15 * 1024 * 1024; // 15MB
-                let valid = true;
-
-                $.each(this.files, function (i, file) {
-                    if (file.type !== 'application/pdf') {
-                        alert('Only PDF files are allowed.');
-                        valid = false;
-                        return false; // Exit loop
-                    }
-                    if (file.size > maxFileSize) {
-                        alert('File size cannot exceed 15MB.');
-                        valid = false;
-                        return false;
-                    }
-                });
-
-                if (!valid) {
-                    $(this).val('');
-                }
-            });
-        });
-    </script>
-    <script>
-        $(document).ready(function () {
             // File validation
             $('#SupportingDocuments').on('change', function () {
                 let maxFileSize = 15 * 1024 * 1024; // 15MB
@@ -107,28 +82,38 @@
                 const endDate = new Date($('#EndDate').val());
                 const today = new Date();
 
-                // Set the first day of the current and previous month
+                // Set the first and last day of the current and previous months
                 const firstDayCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const lastDayCurrentMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0); // Last day of current month
                 const firstDayPreviousMonth = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                const lastDayPreviousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                const lastDayPreviousMonth = new Date(today.getFullYear(), today.getMonth(), 0); // Last day of previous month
 
                 // Calculate the difference in days between start and end date
                 const daysDifference = (endDate - startDate) / (1000 * 60 * 60 * 24);
 
-                // Check if start and end dates are within allowed range
+                // Check if start and end dates are within allowed range (current or previous month) and within 30 days
                 if (
-                    !((startDate >= firstDayCurrentMonth && endDate <= today) ||
-                        (startDate >= firstDayPreviousMonth && endDate <= lastDayPreviousMonth)) ||
-                    daysDifference > 30
+                    !(
+                        (startDate >= firstDayCurrentMonth && endDate <= lastDayCurrentMonth) ||
+                        (startDate >= firstDayPreviousMonth && endDate <= lastDayPreviousMonth)
+                    ) || daysDifference > 31
                 ) {
                     alert('The date range must be within the current or previous month and cannot exceed 30 days.');
                     e.preventDefault();
                 }
             });
-        });
+
+            // Check for existing claim for the month
+        @if (ViewData["ClaimExists"] != null && (bool)ViewData["ClaimExists"])
+        {
+            <text>
+                    alert("You have already submitted a claim for this month.");
+            </text>
+        }
+                });
     </script>
 }
-}
+
 
 <style>
     body {
