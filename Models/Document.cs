@@ -4,8 +4,8 @@
  Name: Cameron Chetty
  Course: BCAD Year 2
  Module: Programming 2B
- Module Code: CLDV6212
- Assessment: Portfolio of Evidence (POE) Part 2
+ Module Code: PROG6212
+ Assessment: Portfolio of Evidence (POE) Part 3
  Github repo link: https://github.com/st10251759/prog6212-poe-part-2
  --------------------------------Student Information----------------------------------
 
