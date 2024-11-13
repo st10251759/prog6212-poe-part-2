@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Default User";
+}
+
+<div class="default-user-container">
+    <div class="default-user-box">
+        <section class="default-user-section">
+            <h2>Welcome, @User.Identity.Name!</h2>
+            <p>Your account has been successfully created. Please wait for the HR Manager to assign you a role.</p>
+            <div class="note-box">
+                <p><strong>Note:</strong> You will be notified once a role has been assigned to you.</p>
+            </div>
+        </section>
+    </div>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: url('/images/temple3.jpg') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+    }
+
+    .default-user-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .default-user-box {
+        background-color: #ffffff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        text-align: center;
+    }
+
+    .default-user-section h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #333333;
+    }
+
+    .default-user-section p {
+        font-size: 1.125rem;
+        color: #555555;
+        margin: 1rem 0;
+    }
+
+    .note-box {
+        background-color: #fffcf0;
+        padding: 1rem;
+        border-radius: 5px;
+        border: 1px solid #f7e3b0;
+        margin-top: 1.5rem;
+    }
+
+        .note-box p {
+            font-size: 1rem;
+            color: #8a6d3b;
+        }
+
+    .default-user-section h2, .default-user-section p {
+        margin-bottom: 1.5rem;
+    }
+</style>

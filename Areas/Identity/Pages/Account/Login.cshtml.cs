@@ -138,6 +138,10 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
                         {
                             return LocalRedirect(Url.Content("~/AcademicManager/Index"));
                         }
+                        else if (roles.Contains("Default"))
+                        {
+                            return LocalRedirect(Url.Content("~/DefaultUser/Index"));
+                        }
                     }
 
                     return LocalRedirect(returnUrl);
