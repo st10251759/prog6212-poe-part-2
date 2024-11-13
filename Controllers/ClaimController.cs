@@ -93,10 +93,10 @@ namespace ST10251759_PROG6212_POE.Controllers
                 return View(model);
             }
 
-            // Validate date range (within the same month and 30 days max)
-            if ((model.EndDate - model.StartDate).Days > 30 || model.StartDate.Month != model.EndDate.Month)
+            // Validate date range (within the same month and 31 days max)
+            if ((model.EndDate - model.StartDate).Days > 32 || model.StartDate.Month != model.EndDate.Month)
             {
-                ModelState.AddModelError("", "The date range must be within one month and cannot exceed 30 days.");
+                ModelState.AddModelError("", "The date range must be within one month and cannot exceed 31 days.");
                 return View(model);
             }
 

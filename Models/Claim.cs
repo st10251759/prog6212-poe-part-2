@@ -71,6 +71,9 @@ namespace ST10251759_PROG6212_POE.Models // Defining a namespace for the project
 
         [Required(ErrorMessage = "End Date is required.")]
         public DateTime EndDate { get; set; }
+        // New field to track payment status
+        [Required]
+        public string PaymentStatus { get; set; } = "Pending"; // Values could be "Pending", "Paid", "Processing"
     }
 
 }

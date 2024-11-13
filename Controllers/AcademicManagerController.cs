@@ -90,6 +90,8 @@ namespace ST10251759_PROG6212_POE.Controllers
                 claim.IsApprovedByManager = true;
                 //The status of the claim is updated to reflect this approval.
                 claim.Status = "Approved by Manager";
+                //The status of the Payment is updated to Processing so that HR can process payment
+                claim.PaymentStatus = "Processing";
                 //This saves the changes made to the claim in the database asynchronously.
                 await _context.SaveChangesAsync();
             }
