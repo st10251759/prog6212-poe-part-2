@@ -1,0 +1,138 @@
+﻿@model IEnumerable<ST10251759_PROG6212_POE.Models.UserViewModel>
+
+<div class="container-dashboard">
+    <h2>Manage Users</h2>
+
+    <table class="table table-hover">
+        <thead class="table-header">
+            <tr>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@user.Id" class="action-link">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit
+                        </a>
+                        
+                        <a asp-action="Delete" asp-route-id="@user.Id" class="action-link delete-link">
+                            <i class="fa-solid fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: url('/images/temple3.jpg') no-repeat center center fixed;
+        background-size: cover;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Container Styling */
+    .container-dashboard {
+        margin: 6rem auto;
+        width: 100%;
+        max-width: 1300px;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        text-align: center;
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-size: 2rem;
+    }
+
+    /* Table Styling */
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+    .table-header {
+        background-color: #f8f9fa;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: #f1f3f5;
+    }
+
+    /* Action Links */
+    .action-link {
+        background-color: #03041c;
+        border: none;
+        padding: 12px 20px;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .action-link:hover {
+            background-color: #fff;
+            color: #03041c;
+            border: 1px solid #03041c;
+        }
+
+ 
+
+    /* Action Section */
+    .action-section {
+        text-align: center;
+    }
+
+    .btn-submit {
+        background-color: #03041c;
+        border: none;
+        padding: 12px 20px;
+        color: white;
+        font-size: 1rem;
+        border-radius: 8px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-submit:hover {
+            background-color: #fff;
+            color: #03041c;
+            border: 1px solid #03041c;
+        }
+
+    /* Font Awesome Icon Styling */
+    .fa-pen-to-square, .fa-trash, .fa-user-plus {
+        font-size: 1rem;
+        color: #6c757d;
+    }
+
+</style>

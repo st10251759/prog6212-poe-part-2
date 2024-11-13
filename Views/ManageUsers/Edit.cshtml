@@ -1,0 +1,114 @@
+﻿@model ST10251759_PROG6212_POE.Models.EditUserViewModel
+
+<div class="container-edit">
+    <h2>Edit User Role</h2>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input type="email" asp-for="Email" class="form-control" readonly />
+        </div>
+        <div class="form-group">
+            <label asp-for="Role">Role</label>
+            <select asp-for="Role" asp-items="@(new SelectList(Model.Roles))" class="form-control"></select>
+        </div>
+        <button type="submit" class="btn-edit btn-primary">Update</button>
+        <a asp-action="Index" class="btn-edit btn-secondary">Cancel</a>
+    </form>
+</div>
+
+<style>
+    /* Global styling */
+    body {
+        font-family: Arial, sans-serif;
+        background: url('/images/temple3.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #03041c;
+        margin: 0;
+        padding: 0;
+    }
+
+    /* Container styling for Edit User Role page */
+    .container-edit {
+        max-width: 600px;
+        margin: 100px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    /* Header styling */
+    h2 {
+        text-align: center;
+        color: #03041c;
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: bold;
+    }
+
+    /* Form styling */
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #03041c;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        transition: border-color 0.3s ease-in-out;
+    }
+
+        .form-control:focus {
+            border-color: #03041c;
+            outline: none;
+        }
+
+    /* Button styling */
+    .btn-edit {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #03041c;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        text-align: center;
+        display: inline-block;
+        margin-top: 10px;
+    }
+
+    .btn-primary {
+        background-color: #03041c;
+    }
+
+        .btn-primary:hover {
+            background-color: #ffffff;
+            color: #03041c;
+            border: 1px solid #03041c;
+        }
+
+    .btn-secondary {
+        background-color: #ccc;
+        color: #03041c;
+    }
+
+        .btn-secondary:hover {
+            background-color: #ffffff;
+            color: #03041c;
+            border: 1px solid #03041c;
+        }
+</style>
