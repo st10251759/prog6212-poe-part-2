@@ -37,26 +37,24 @@ namespace ST10251759_PROG6212_POE.Models // Defining the namespace for the model
     // This class is used to transfer data between the view and the controller
     public class ClaimViewModel
     {
-        // Property to hold the number of hours worked by the user
-        // The Required attribute enforces that this field must be filled out
-        [Required(ErrorMessage = "Hours Worked is required.")] // Custom error message if validation fails
-        [System.ComponentModel.DataAnnotations.Range(1, 150, ErrorMessage = "Hours Worked must be between 1 and 150.")] // Validates that the value must be between 1 and 100
-        public decimal HoursWorked { get; set; } // Decimal property for storing hours worked
+        [Required(ErrorMessage = "Hours Worked is required.")]
+        [Range(1, 150, ErrorMessage = "Hours Worked must be between 1 and 150.")]
+        public decimal HoursWorked { get; set; }
 
-        // Property to hold the user's hourly rate
-        // The Required attribute enforces that this field must be filled out
-        [Required(ErrorMessage = "Hourly Rate is required.")] // Custom error message if validation fails
-        [System.ComponentModel.DataAnnotations.Range(200, 1000, ErrorMessage = "Hourly Rate must be between 200 and 1000.")] // Validates that the value must be between 50 and 1000
-        public decimal HourlyRate { get; set; } // Decimal property for storing the hourly rate
+        [Required(ErrorMessage = "Hourly Rate is required.")]
+        [Range(200, 1000, ErrorMessage = "Hourly Rate must be between 200 and 1000.")]
+        public decimal HourlyRate { get; set; }
 
-        // Property to hold additional notes related to the claim
-        // The MaxLength attribute restricts the length of the notes to a maximum of 500 characters
-        [MaxLength(500, ErrorMessage = "Notes can't exceed 500 characters.")] // Custom error message if validation fails
-        public string Notes { get; set; } // String property for storing notes
+        [MaxLength(500, ErrorMessage = "Notes can't exceed 500 characters.")]
+        public string Notes { get; set; }
 
-        // Property to hold a list of supporting documents for the claim
-        // This property will accept a list of files uploaded by the user
-        [Display(Name = "Supporting Documents")] // This attribute specifies the display name for the property in the view
-        public List<IFormFile> SupportingDocuments { get; set; } // List of IFormFile to hold uploaded documents
+        [Display(Name = "Supporting Documents")]
+        public List<IFormFile> SupportingDocuments { get; set; }
+
+        [Required(ErrorMessage = "Start Date is required.")]
+        public DateTime StartDate { get; set; }
+
+        [Required(ErrorMessage = "End Date is required.")]
+        public DateTime EndDate { get; set; }
     }
 }

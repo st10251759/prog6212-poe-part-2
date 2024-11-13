@@ -88,39 +88,59 @@ namespace ST10251759_PROG6212_POE.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ClaimViewModel model)
         {
-            // Validate model state - checks if the incoming data (from ClaimViewModel) is valid. If not, it returns the same view with the current model to show any validation errors.
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            // Validate supporting documents - This block checks if the user has uploaded any supporting documents. If none are found, it adds an error message
+            // Validate date range (within the same month and 30 days max)
+            if ((model.EndDate - model.StartDate).Days > 30 || model.StartDate.Month != model.EndDate.Month)
+            {
+                ModelState.AddModelError("", "The date range must be within one month and cannot exceed 30 days.");
+                return View(model);
+            }
+
+            // Validate that the date is in the current or previous month
+            var currentDate = DateTime.Now;
+            var validMonths = new[] { currentDate.Month, currentDate.AddMonths(-1).Month };
+            if (!validMonths.Contains(model.StartDate.Month) || !validMonths.Contains(model.EndDate.Month))
+            {
+                ModelState.AddModelError("", "Claims can only be submitted for the current or previous month.");
+                return View(model);
+            }
+
+            // Check if a claim has already been submitted for the month
+            var user = await _userManager.GetUserAsync(User);
+            bool claimExists = _context.Claims.Any(c =>
+                c.ApplicationUserId == user.Id &&
+                c.StartDate.Month == model.StartDate.Month &&
+                c.StartDate.Year == model.StartDate.Year);
+
+            if (claimExists)
+            {
+                ModelState.AddModelError("", "You have already submitted a claim for this month.");
+                return View(model);
+            }
+
             if (model.SupportingDocuments == null || model.SupportingDocuments.Count == 0)
             {
                 ModelState.AddModelError("", "At least one supporting document must be attached.");
                 return View(model);
             }
 
-            // Validate file types and sizes - checks if the document uploaded is a valid document - of the type PDF and the size of the document is no greater than 15 MB - if this is not true returns current model with errors
-            bool isInvalidFile = false; //flag variable for invalid file (not a PDF)
+            bool isInvalidFile = false;
             foreach (var file in model.SupportingDocuments)
             {
-                // Call the IsValidDocument method to check the validity of the file
                 if (!IsValidDocument(file))
                 {
-                    ViewBag.InvalidFile = true; //assign a viewbag variable to true - indicated user is tryinhg to upload an invalid file - this variable in the view willbe used to change the label describing the correct file format to red
                     isInvalidFile = true;
                     ModelState.AddModelError("", "Only PDF files under 15 MB are allowed.");
                     return View(model);
                 }
             }
 
-            // If the model is valid and documents are valid, proceed to create the claim
             if (!isInvalidFile)
             {
-                var user = await _userManager.GetUserAsync(User);
-
-                //Creates a new claim object - retrives the HoursWorked, HourlyRate and Notes from the view the user interacts with, and also stores the user id of the user currently logged in
                 var claim = new Claim
                 {
                     HoursWorked = model.HoursWorked,
@@ -128,34 +148,26 @@ namespace ST10251759_PROG6212_POE.Controllers
                     Notes = model.Notes,
                     DateSubmitted = DateTime.Now,
                     ApplicationUserId = user.Id,
-                    TotalAmount = model.HourlyRate * model.HoursWorked
-
+                    TotalAmount = model.HourlyRate * model.HoursWorked,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate
                 };
 
-                //adds the claim to the database table and saves changes
                 _context.Claims.Add(claim);
                 await _context.SaveChangesAsync();
 
-                // Handle file upload
                 var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-
-                // for each loop that goes through each file in the SupportingDocuments list of the model. Each file represents a document that the user uploaded to support their claim.
                 foreach (var file in model.SupportingDocuments)
                 {
-                    //generates a new unique identifier (GUID). This ensures that every file has a unique name, even if multiple files with the same original name are uploaded.
                     var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                    // Ensure directory exists
                     Directory.CreateDirectory(uploadsFolder);
 
-                    // Save file
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
                     }
 
-                    // Create document entry and link it to the claim - A new Document object is created to represent the uploaded file in the database.
                     var document = new Document
                     {
                         ClaimId = claim.ClaimId,
@@ -163,19 +175,17 @@ namespace ST10251759_PROG6212_POE.Controllers
                         FilePath = filePath
                     };
 
-                    //This line adds the newly created document object to the _context.Documents collection. This prepares the document to be saved in the database when changes are committed.
                     _context.Documents.Add(document);
                 }
 
                 await _context.SaveChangesAsync();
-
-                //This line stores a success message in TempData. This is a temporary data storage mechanism that allows the message to be displayed to the user on the next page they visit
                 TempData["SuccessMessage"] = "Claim submitted successfully!";
-                //this line redirects the user to the "Dashboard" action of the "Lecturer" controller.
                 return RedirectToAction("Dashboard", "Lecturer");
             }
+
             return View(model);
         }
+
 
         // GET: Claims/Track
         public async Task<IActionResult> TrackClaims()

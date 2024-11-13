@@ -36,67 +36,41 @@ namespace ST10251759_PROG6212_POE.Models // Defining a namespace for the project
     // Defining a Claim class to represent a claim in the application
     public class Claim
     {
-        // ClaimId property: a unique identifier for each claim
         public int ClaimId { get; set; }
 
-        //The main assumpt is that Lecturers will enter their Hourly rate, submit supporting documents that verify the hourly rate and Porgramme Coordinators and Academic Managers will verify eveidence - to Aprove and Reject the claim - hence hourly rate is not populated - otis stiputlated to change
-        // HoursWorked property: represents the number of hours worked
-        [Required(ErrorMessage = "Hours Worked is required.")] // Validation to ensure this field is not empty
-        [System.ComponentModel.DataAnnotations.Range(1, 150, ErrorMessage = "Hours Worked must be between 1 and 150.")] // Validation to ensure the value is between 1 and 100  - It is assumped that Lectures can not work more than 160 hours a month
+        [Required(ErrorMessage = "Hours Worked is required.")]
+        [Range(1, 150, ErrorMessage = "Hours Worked must be between 1 and 150.")]
         public decimal HoursWorked { get; set; }
 
-        // HourlyRate property: represents the rate per hour for the claim
-        [Required(ErrorMessage = "Hourly Rate is required.")] // Validation to ensure this field is not empty
-        [System.ComponentModel.DataAnnotations.Range(200, 1000, ErrorMessage = "Hourly Rate must be between 200 and 1000.")] // Validation to ensure the value is between 50 and 1000 - It is assumpted Lecturers Hourly rate is between R200 and R1000 an hour
+        [Required(ErrorMessage = "Hourly Rate is required.")]
+        [Range(200, 1000, ErrorMessage = "Hourly Rate must be between 200 and 1000.")]
         public decimal HourlyRate { get; set; }
 
-        // TotalAmount property: the total amount to be paid for the claim, calculated from HoursWorked and HourlyRate
-        [Required] // Validation to ensure this field is not empty
+        [Required]
         public decimal TotalAmount { get; set; }
 
-        // Notes property: additional notes related to the claim, with a maximum length
-        [MaxLength(500, ErrorMessage = "Notes can't exceed 500 characters.")] // Validation to restrict length to 500 characters
+        [MaxLength(500, ErrorMessage = "Notes can't exceed 500 characters.")]
         public string Notes { get; set; }
 
-        // DateSubmitted property: the date the claim was submitted
-        [Required] // Validation to ensure this field is not empty
-        [CustomValidation(typeof(Claim), nameof(ValidateSubmissionDate))] // Custom validation to check the submission date
+        [Required]
         public DateTime DateSubmitted { get; set; }
 
-        // Status property: tracks the current status of the claim, defaulting to "Pending"
         public string Status { get; set; } = "Pending";
 
-        // Approval tracking properties to indicate if the claim has been approved by the coordinator and manager
-        public bool IsApprovedByCoordinator { get; set; } = false; // Default is false (not approved)
-        public bool IsApprovedByManager { get; set; } = false; // Default is false (not approved)
+        public bool IsApprovedByCoordinator { get; set; } = false;
+        public bool IsApprovedByManager { get; set; } = false;
 
-        // ApplicationUserId property: foreign key linking the claim to the user who submitted it
-        [ForeignKey("ApplicationUser")] // Indicates that this property is a foreign key
-        public string ApplicationUserId { get; set; } // User ID of the person making the claim
-
-        // Navigation property: establishes a relationship with the ApplicationUser model
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
         public virtual ApplicationUser ApplicationUser { get; set; }
 
-        // Documents property: a collection of documents associated with the claim
-        public virtual ICollection<Document> Documents { get; set; } // Allows for multiple documents to be linked to a claim
+        public virtual ICollection<Document> Documents { get; set; }
 
-        // Custom validation method for the DateSubmitted property
-        public static ValidationResult ValidateSubmissionDate(DateTime dateSubmitted, ValidationContext context)
-        {
-            var currentDate = DateTime.Now; // Get the current date and time
-            // Check if the submitted date is in the future
-            if (dateSubmitted > currentDate)
-            {
-                return new ValidationResult("Date Submitted cannot be in the future."); // Return an error if it is
-            }
+        [Required(ErrorMessage = "Start Date is required.")]
+        public DateTime StartDate { get; set; }
 
-            // Check if the submitted date is within the current or previous month
-            if (dateSubmitted.Month != currentDate.Month && dateSubmitted.Month != currentDate.AddMonths(-1).Month)
-            {
-                return new ValidationResult("Date Submitted can only be from the current month or previous month."); // Return an error if it isn't
-            }
-
-            return ValidationResult.Success; // Return success if all validations pass
-        }
+        [Required(ErrorMessage = "End Date is required.")]
+        public DateTime EndDate { get; set; }
     }
+
 }

@@ -60,6 +60,7 @@
             <tr>
                 <th>Claim ID</th>
                 <th>Submission Date</th>
+                <th>Claim For</th> <!-- New column header -->
                 <th>Status</th>
                 <th>Remarks</th>
             </tr>
@@ -70,6 +71,7 @@
                 <tr class="@GetStatusClass(claim.Status)" data-status="@claim.Status">
                     <td>@claim.ClaimId</td>
                     <td>@claim.DateSubmitted.ToString("yyyy/MM/dd")</td>
+                    <td>@claim.StartDate.ToString("MMM yyyy")</td> <!-- Displaying Claim For -->
                     <td class="@GetRowClass(claim.Status)">@claim.Status</td>
                     <td>@claim.Notes</td>
                 </tr>

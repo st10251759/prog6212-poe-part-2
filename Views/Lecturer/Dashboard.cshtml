@@ -18,6 +18,7 @@
             <tr>
                 <th>Claim ID</th>
                 <th>Date Submitted</th>
+                <th>Claim For</th> <!-- New column header -->
                 <th>Hours Worked</th>
                 <th>Hourly Rate</th>
                 <th>Total Amount</th>
@@ -30,6 +31,7 @@
                 <tr>
                     <td>@claim.ClaimId</td>
                     <td>@claim.DateSubmitted.ToShortDateString()</td>
+                    <td>@claim.StartDate.ToString("MMM yyyy")</td> <!-- Displaying Claim For -->
                     <td>@claim.HoursWorked</td>
                     <td>R @claim.HourlyRate</td>
                     <td>R @claim.TotalAmount</td>
@@ -60,6 +62,7 @@
         <a href="/Claim/Create" class="btn-submit"><i class="fa-solid fa-upload"></i> Submit New Claim</a>
     </div>
 </div>
+
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
