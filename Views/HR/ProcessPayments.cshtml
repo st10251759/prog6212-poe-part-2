@@ -1,0 +1,143 @@
+﻿@model ST10251759_PROG6212_POE.Models.ProcessPaymentsViewModel
+
+<div class="container-payments">
+    <h1>Process Payments</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Claim ID</th>
+                <th>Lecturer Name</th>
+                <th>Total Amount</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in Model.Claims)
+            {
+                <tr>
+                    <td>@claim.ClaimId</td>
+                    <td>@claim.ApplicationUser.Firstname @claim.ApplicationUser.Lastname</td>
+                    <td>R @claim.TotalAmount.ToString("N2")</td>
+                    <td>@claim.Status</td>
+                    <td>
+                        <form asp-action="ProcessPayment" method="post">
+                            <input type="hidden" name="claimId" value="@claim.ClaimId" />
+                            <button type="submit" class="btn-process btn-process-success">Process Payment</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="summary">
+        <h2>Payment Summary</h2>
+        <p>Total Claims Processed: @Model.TotalClaims</p>
+        <p>Total Amount to be Paid: R @Model.TotalAmountToPay.ToString("N2")</p>
+        <p>Pending Payments: @Model.PendingPayments</p>
+    </div>
+</div>
+
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        /* background-color: #03041c; */
+        background: url('/images/temple4.jpg') no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container-payments {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #03041c;
+        margin-bottom: 30px;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+        .table th, .table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+            color: #03041c;
+        }
+
+        .table th {
+            background-color: #f2f2f2;
+            color: #03041c;
+            font-weight: bold;
+        }
+
+        .table td {
+            background-color: #ffffff;
+        }
+
+        .table a {
+            color: #03041c;
+            text-decoration: underline;
+        }
+
+            .table a:hover {
+                color: #03041c;
+            }
+
+    .btn-process {
+        padding: 10px 15px;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease-in-out;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .btn-process-success {
+        background-color: #28a745;
+        color: #ffffff;
+    }
+
+        .btn-process-success:hover {
+            background-color: #218838;
+        }
+
+    .summary {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+        .summary h2 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #03041c;
+        }
+
+        .summary p {
+            font-size: 18px;
+            color: #666;
+        }
+ </style>

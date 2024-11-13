@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using ST10251759_PROG6212_POE.Data;
 using ST10251759_PROG6212_POE.Models;
 
@@ -37,20 +38,50 @@ namespace ST10251759_PROG6212_POE.Controllers
             return View(dashboardData);
         }
 
-        // Update Payment Status
-        public IActionResult UpdatePaymentStatus(int claimId, string status)
+        // Display Process Payments page
+        public async Task<IActionResult> ProcessPayments()
         {
-            var claim = _context.Claims.Find(claimId);
+            var claims = await _context.Claims
+                .Include(c => c.ApplicationUser)
+                .Where(c => c.Status == "Approved by Manager" && c.PaymentStatus == "Processing")
+                .ToListAsync();
+
+            var claimsprocesssed = await _context.Claims
+                .Include(c => c.ApplicationUser)
+                .Where(c => c.Status == "Approved by Manager" && c.PaymentStatus == "Paid")
+                .ToListAsync();
+
+            var totalClaims = claimsprocesssed.Count(c => c.PaymentStatus == "Paid");
+            var totalAmountToPay = claims.Sum(c => c.TotalAmount);
+            var pendingPayments = claims.Count(c => c.PaymentStatus == "Processing");
+
+            var model = new ProcessPaymentsViewModel
+            {
+                Claims = claims,
+                TotalClaims = totalClaims,
+                TotalAmountToPay = totalAmountToPay,
+                PendingPayments = pendingPayments
+            };
+
+            return View(model);
+        }
+
+        // Process a specific payment
+        [HttpPost]
+        public async Task<IActionResult> ProcessPayment(int claimId)
+        {
+            var claim = await _context.Claims.FindAsync(claimId);
             if (claim == null)
             {
                 return NotFound();
             }
 
-            claim.PaymentStatus = status; // Update payment status
-            _context.SaveChanges();
+            claim.PaymentStatus = "Paid";
+            await _context.SaveChangesAsync();
 
-            return RedirectToAction("Dashboard");
+            return RedirectToAction(nameof(ProcessPayments));
         }
+
     }
 
 }
