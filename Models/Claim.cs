@@ -74,6 +74,8 @@ namespace ST10251759_PROG6212_POE.Models // Defining a namespace for the project
         // New field to track payment status
         [Required]
         public string PaymentStatus { get; set; } = "Pending"; // Values could be "Pending", "Paid", "Processing"
+
+       
     }
 
 }
