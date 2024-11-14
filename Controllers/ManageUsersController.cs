@@ -1,114 +1,157 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
-using System.Linq;
-using ST10251759_PROG6212_POE.Models;
+﻿/*
+ --------------------------------Student Information----------------------------------
+ STUDENT NO.: ST10251759
+ Name: Cameron Chetty
+ Course: BCAD Year 2
+ Module: Programming 2B
+ Module Code: PROG6212
+ Assessment: Portfolio of Evidence (POE) Part 3
+ Github repo link: https://github.com/st10251759/prog6212-poe-part-2
+ --------------------------------Student Information----------------------------------
+
+ ==============================Code Attribution==================================
+
+ Microsfot Identity
+ Author: Andy Malone MVP
+ Link: https://www.youtube.com/watch?v=zS79FDhAhBs
+ Date Accessed: 11 October 2024
+
+ Database Work
+ Author: Microsoft
+ Link: https://learn.microsoft.com/en-us/aspnet/core/tutorials/first-mvc-app/working-with-sql?view=aspnetcore-8.0&tabs=visual-studio
+ Date Accessed: 11 October 2024
+
+ Admin Panel to Manage Users Resource
+ Author: Code A Future
+ Link: https://www.youtube.com/watch?v=WIUI_dLZpgs
+ Date Accessed: 13 Novemeber 2024
+
+ ==============================Code Attribution==================================
+
+ */
+
+using Microsoft.AspNetCore.Authorization; // Required for adding authorization attributes to controllers or actions.
+using Microsoft.AspNetCore.Identity; // Provides access to ASP.NET Core Identity services for managing users and roles.
+using Microsoft.AspNetCore.Mvc; // For building the web API or web MVC controllers and actions.
+using Microsoft.EntityFrameworkCore; // For Entity Framework Core to perform database operations asynchronously.
+using System.Threading.Tasks; // For working with asynchronous methods and tasks.
+using System.Linq; // For LINQ queries to operate on collections and queryable objects.
+using ST10251759_PROG6212_POE.Models; // For using model classes that represent data structures and views.
 
 namespace ST10251759_PROG6212_POE.Controllers
 {
+    // Ensures that only users with the 'HR Manager' role can access the actions in this controller
     [Authorize(Roles = "HR Manager")]
     public class ManageUsersController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly UserManager<IdentityUser> _userManager; // Manages users in the ASP.NET Core Identity system.
+        private readonly RoleManager<IdentityRole> _roleManager; // Manages roles in the ASP.NET Core Identity system.
 
+        // Constructor to inject dependencies for user and role management
         public ManageUsersController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            _userManager = userManager;
-            _roleManager = roleManager;
+            _userManager = userManager; // Assigning the injected UserManager instance to the private field
+            _roleManager = roleManager; // Assigning the injected RoleManager instance to the private field
         }
 
+        // Action to display a list of users with their basic details
         public async Task<IActionResult> Index()
         {
-            // Fetch users from the database first
+            // Fetches all users asynchronously from the UserManager and maps them to a UserViewModel containing user id and email
             var users = await _userManager.Users
                 .Select(user => new UserViewModel
                 {
-                    Id = user.Id,
-                    Email = user.Email
+                    Id = user.Id, // Mapping user Id to the view model
+                    Email = user.Email // Mapping user Email to the view model
                 })
-                .ToListAsync();
+                .ToListAsync(); // Converts the IQueryable result into a list asynchronously
 
-            // Then, for each user, get the roles in a separate loop
+            // For each user, fetch their roles asynchronously and assign the first role (if exists) to the view model
             foreach (var user in users)
             {
-                var appUser = await _userManager.FindByIdAsync(user.Id);
-                var roles = await _userManager.GetRolesAsync(appUser);
-                user.Role = roles.FirstOrDefault();
+                var appUser = await _userManager.FindByIdAsync(user.Id); // Find the user by Id
+                var roles = await _userManager.GetRolesAsync(appUser); // Fetch roles of the user
+                user.Role = roles.FirstOrDefault(); // Assign the first role (if any) to the view model
             }
 
+            // Returns the users list to the view (Index view)
             return View(users);
         }
 
-
-        // GET: Edit action to edit a user’s role
+        // GET action to load the edit user page with the current user’s details and available roles
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(id); // Find the user by Id asynchronously
+            if (user == null) // If no user is found, return a NotFound result
                 return NotFound();
 
-            var userRole = await _userManager.GetRolesAsync(user);
-            var roles = _roleManager.Roles.Select(r => r.Name).ToList();
+            // Fetch the user's roles and all available roles from RoleManager
+            var userRole = await _userManager.GetRolesAsync(user); // Get the current roles assigned to the user
+            var roles = _roleManager.Roles.Select(r => r.Name).ToList(); // Get all roles in the system
 
+            // Prepare the model to pass to the Edit view, including user details and the list of roles
             var model = new EditUserViewModel
             {
-                Id = user.Id,
-                Email = user.Email,
-                Role = userRole.FirstOrDefault(),
-                Roles = roles
+                Id = user.Id, // User Id
+                Email = user.Email, // User Email
+                Role = userRole.FirstOrDefault(), // The user’s current role (if any)
+                Roles = roles // List of all roles available in the system
             };
 
-            return View(model);
+            return View(model); // Return the Edit view with the model data
         }
 
-        // POST: Edit action to update the user’s role
+        // POST action to update the user’s role after editing
         [HttpPost]
         public async Task<IActionResult> Edit(EditUserViewModel model)
         {
-            var user = await _userManager.FindByIdAsync(model.Id);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(model.Id); // Find the user by Id
+            if (user == null) // If no user is found, return a NotFound result
                 return NotFound();
 
+            // Fetch the current roles of the user
             var userRoles = await _userManager.GetRolesAsync(user);
-            if (userRoles.Any())
-                await _userManager.RemoveFromRoleAsync(user, userRoles.First());
+            if (userRoles.Any()) // If the user has any roles
+                await _userManager.RemoveFromRoleAsync(user, userRoles.First()); // Remove the first role the user has
 
-            await _userManager.AddToRoleAsync(user, model.Role);
-            return RedirectToAction(nameof(Index));
+            // Add the new selected role from the model
+            await _userManager.AddToRoleAsync(user, model.Role); // Assign the new role to the user
+
+            return RedirectToAction(nameof(Index)); // After updating, redirect to the Index action to display the updated user list
         }
 
-        // GET: Confirm delete view
+        // GET action to confirm deletion of a user
         [HttpGet]
         public async Task<IActionResult> Delete(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(id); // Find the user by Id
+            if (user == null) // If no user is found, return a NotFound result
                 return NotFound();
 
+            // Prepare the model to confirm deletion with the user's Email
             var model = new DeleteUserViewModel
             {
-                Id = user.Id,
-                Email = user.Email
+                Id = user.Id, // User Id
+                Email = user.Email // User Email to confirm which user will be deleted
             };
 
-            return View(model);
+            return View(model); // Return the Delete confirmation view with the model data
         }
 
-        // POST: Delete action to delete a user
+        // POST action to actually delete the user from the system after confirmation
         [HttpPost, ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var user = await _userManager.FindByIdAsync(id);
-            if (user == null)
+            var user = await _userManager.FindByIdAsync(id); // Find the user by Id
+            if (user == null) // If no user is found, return a NotFound result
                 return NotFound();
 
-            await _userManager.DeleteAsync(user);
-            return RedirectToAction(nameof(Index), "ManageUsers");
+            // Delete the user from the UserManager
+            await _userManager.DeleteAsync(user); // Delete the user from the system
 
+            // After successful deletion, redirect back to the Index action to display the updated user list
+            return RedirectToAction(nameof(Index), "ManageUsers");
         }
     }
 }

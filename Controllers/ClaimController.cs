@@ -48,69 +48,73 @@
 
  */
 
-//Import List
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using ST10251759_PROG6212_POE.Data;
-using ST10251759_PROG6212_POE.Models;
-using System;
+// Importing required namespaces
+using Microsoft.AspNetCore.Authorization; // Enables role-based and policy-based authorization for controller actions.
+using Microsoft.AspNetCore.Identity; // Provides classes and services for managing user accounts, such as UserManager and IdentityUser.
+using Microsoft.AspNetCore.Mvc; // Provides classes for building MVC controllers and handling HTTP requests and responses.
+using ST10251759_PROG6212_POE.Data; // Imports the project's Data namespace, which likely includes database context and data models.
+using ST10251759_PROG6212_POE.Models; // Imports the Models namespace, where custom models like ClaimViewModel and Claim may be defined.
+using System; // Provides fundamental classes and base types, such as DateTime and Array.
 
-namespace ST10251759_PROG6212_POE.Controllers
-{//namespace begin
-    //Using Micrisoft Idenitity with Roles - This line means that only users with the "Lecturer" role can access the actions in this controller.
+namespace ST10251759_PROG6212_POE.Controllers // Defining the namespace for organizing code related to the project’s controllers.
+{// Namespace start
+
+    // Restricting access to users with the "Lecturer" role. Only users in this role can access this controller's actions.
     [Authorize(Roles = "Lecturer")]
-    public class ClaimController : Controller
-    {//ClaimController class begin
+    public class ClaimController : Controller // Defining the ClaimController class, which inherits from the base Controller class.
+    {// ClaimController class start
 
-        //private fields declaration - These lines declare three private fields that will be used throughout the controller.
-        private readonly Prog6212DbContext _context; //interact with the database.
-        private readonly UserManager<IdentityUser> _userManager; //helps manage user accounts, like retrieving the currently logged-in user.
-        private readonly IWebHostEnvironment _environment; //provides information about the web hosting environment
+        // Declaring private fields to store services for use throughout the controller.
+        private readonly Prog6212DbContext _context; // Used to interact with the application's database.
+        private readonly UserManager<IdentityUser> _userManager; // Used to manage user accounts, retrieve information about the current user, etc.
+        private readonly IWebHostEnvironment _environment; // Provides information about the hosting environment, such as web root paths.
 
-
-        //Constructor method - initializes the private fields with the values passed in, allowing the controller to use them for database access, user management, and environment information.
+        // Constructor for ClaimController - initializes the private fields with instances of the services passed in.
+        // These fields are injected through dependency injection.
         public ClaimController(Prog6212DbContext context, UserManager<IdentityUser> userManager, IWebHostEnvironment environment)
-        {//Construct begin
-            _context = context;
-            _userManager = userManager;
-            _environment = environment;
-        }//constructor end
+        {// Constructor start
+            _context = context; // Assigning the injected database context to the _context field for database operations.
+            _userManager = userManager; // Assigning the UserManager instance to _userManager to manage user-related actions.
+            _environment = environment; // Assigning the environment instance to _environment to access hosting environment properties.
+        }// Constructor end
 
-        // GET: Claim/Create - This method responds to GET requests to the "Claim/Create" URL. It simply returns a view (web page) for creating a new claim.
+        // GET: Claim/Create - Handles GET requests to display the form for creating a new claim.
         public IActionResult Create()
         {
+            // Returning the Create view, which provides the form for the user to fill out and submit a new claim.
             return View();
         }
 
-        // POST: Claim/Create - This method handles POST requests to submit a new claim
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        // POST: Claim/Create - Handles form submissions to create a new claim.
+        [HttpPost] // Specifies that this action only handles POST requests.
+        [ValidateAntiForgeryToken] // Helps prevent Cross-Site Request Forgery (CSRF) attacks by validating the anti-forgery token.
         public async Task<IActionResult> Create(ClaimViewModel model)
         {
+            // Checking if the model is valid (i.e., if all required fields are filled out and satisfy validation rules).
             if (!ModelState.IsValid)
             {
+                // If the model is not valid, re-display the form with validation messages.
                 return View(model);
             }
 
-            // Validate date range (within the same month and 31 days max)
+            // Validating that the date range is within a single month and does not exceed 31 days.
             if ((model.EndDate - model.StartDate).Days > 32 || model.StartDate.Month != model.EndDate.Month)
             {
                 ModelState.AddModelError("", "The date range must be within one month and cannot exceed 31 days.");
-                return View(model);
+                return View(model); // Returning the form view with an error message if validation fails.
             }
 
-            // Validate that the date is in the current or previous month
+            // Checking if the claim is for the current or previous month only.
             var currentDate = DateTime.Now;
-            var validMonths = new[] { currentDate.Month, currentDate.AddMonths(-1).Month };
+            var validMonths = new[] { currentDate.Month, currentDate.AddMonths(-1).Month }; // Array of valid months.
             if (!validMonths.Contains(model.StartDate.Month) || !validMonths.Contains(model.EndDate.Month))
             {
                 ModelState.AddModelError("", "Claims can only be submitted for the current or previous month.");
-                return View(model);
+                return View(model); // Returning the form with an error message if the claim date is outside the valid range.
             }
 
-            // Check if a claim has already been submitted for the month
-            var user = await _userManager.GetUserAsync(User);
+            // Checking if a claim has already been submitted for the specified month by the current user.
+            var user = await _userManager.GetUserAsync(User); // Retrieving the logged-in user.
             bool claimExists = _context.Claims.Any(c =>
                 c.ApplicationUserId == user.Id &&
                 c.StartDate.Month == model.StartDate.Month &&
@@ -118,18 +122,19 @@ namespace ST10251759_PROG6212_POE.Controllers
 
             if (claimExists)
             {
-                ModelState.AddModelError("", "You have already submitted a claim for this month.");
-                ViewData["ClaimExists"] = true; // Set flag for jQuery
-                return View(model);
+                ModelState.AddModelError("", "You have already submitted a claim for this month."); // Error if duplicate.
+                ViewData["ClaimExists"] = true; // Setting a flag for frontend (e.g., jQuery) handling.
+                return View(model); // Returning the form with an error message.
             }
 
-            // File validation
+            // Validating that at least one supporting document is attached.
             if (model.SupportingDocuments == null || model.SupportingDocuments.Count == 0)
             {
                 ModelState.AddModelError("", "At least one supporting document must be attached.");
-                return View(model);
+                return View(model); // Returning the form if no documents are attached.
             }
 
+            // Checking if each document meets file criteria (PDF format and under 15 MB).
             bool isInvalidFile = false;
             foreach (var file in model.SupportingDocuments)
             {
@@ -137,88 +142,88 @@ namespace ST10251759_PROG6212_POE.Controllers
                 {
                     isInvalidFile = true;
                     ModelState.AddModelError("", "Only PDF files under 15 MB are allowed.");
-                    return View(model);
+                    return View(model); // Returning form with error if any file is invalid.
                 }
             }
 
             if (!isInvalidFile)
             {
+                // Creating a new Claim object with the values provided in the form.
                 var claim = new Claim
                 {
                     HoursWorked = model.HoursWorked,
                     HourlyRate = model.HourlyRate,
                     Notes = model.Notes,
-                    DateSubmitted = DateTime.Now,
-                    ApplicationUserId = user.Id,
-                    TotalAmount = model.HourlyRate * model.HoursWorked,
+                    DateSubmitted = DateTime.Now, // Setting the current date as submission date.
+                    ApplicationUserId = user.Id, // Linking claim to current user.
+                    TotalAmount = model.HourlyRate * model.HoursWorked, // Calculating the total amount for the claim.
                     StartDate = model.StartDate,
                     EndDate = model.EndDate
                 };
 
-                _context.Claims.Add(claim);
-                await _context.SaveChangesAsync();
+                _context.Claims.Add(claim); // Adding the new claim to the database context.
+                await _context.SaveChangesAsync(); // Saving the claim to the database asynchronously.
 
+                // Setting up the file upload folder for saving supporting documents.
                 var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
                 foreach (var file in model.SupportingDocuments)
                 {
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    Directory.CreateDirectory(uploadsFolder);
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName; // Generating a unique file name.
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName); // Full path for saving the file.
+                    Directory.CreateDirectory(uploadsFolder); // Ensuring that the upload folder exists.
 
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        await file.CopyToAsync(fileStream);
+                        await file.CopyToAsync(fileStream); // Copying the file to the server.
                     }
 
+                    // Creating a new Document object to link the file to the claim.
                     var document = new Document
                     {
-                        ClaimId = claim.ClaimId,
-                        DocumentName = uniqueFileName,
-                        FilePath = filePath
+                        ClaimId = claim.ClaimId, // Linking document to the created claim.
+                        DocumentName = uniqueFileName, // Storing the generated file name.
+                        FilePath = filePath // Storing the file path.
                     };
 
-                    _context.Documents.Add(document);
+                    _context.Documents.Add(document); // Adding the document record to the database.
                 }
 
-                await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Claim submitted successfully!";
-                return RedirectToAction("Dashboard", "Lecturer");
+                await _context.SaveChangesAsync(); // Saving all changes (including document records) to the database.
+                TempData["SuccessMessage"] = "Claim submitted successfully!"; // Storing a success message for display.
+                return RedirectToAction("Dashboard", "Lecturer"); // Redirecting to the Lecturer's Dashboard.
             }
 
-            return View(model);
+            return View(model); // If file validation fails, returning the form view.
         }
 
-
-
-        // GET: Claims/Track
+        // GET: Claims/Track - Displays the track claims page for the logged-in user.
         public async Task<IActionResult> TrackClaims()
         {
-            // Get the logged-in user
+            // Retrieving the currently logged-in user.
             var currentUser = await _userManager.GetUserAsync(User);
 
-            // Fetch claims for the current user
+            // Fetching all claims submitted by the current user.
             var claims = _context.Claims
                 .Where(c => c.ApplicationUserId == currentUser.Id)
                 .ToList();
-            //pass the list of claims to the view
+
+            // Passing the list of claims to the view.
             return View(claims);
         }
 
-        // Method to validate if the document is a PDF and does not exceed 15 MB - Used in Unit Testing - same functionality as if statement 
+        // Validates if a document is a PDF and is less than 15 MB in size.
         public bool IsValidDocument(IFormFile file)
         {
-            // Check if the file is not null
+            // Checking if the file is not null.
             if (file == null)
             {
-                return false;
+                return false; // Returning false if the file is null.
             }
 
-            // Validate the file type and size
+            // Validating the file type (must be PDF) and size (must be 15 MB or less).
             return file.ContentType == "application/pdf" && file.Length <= 15 * 1024 * 1024; // 15 MB
         }
 
+    }// ClaimController class end
+}// Namespace end
 
-
-    }//ClaimController class end
-
-}//namespace end
