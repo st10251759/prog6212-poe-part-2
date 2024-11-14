@@ -93,6 +93,21 @@
                                 <a class="nav-link text-dark" asp-area="" asp-controller="AcademicManager" asp-action="Index"><i class="fa fa-bar-chart" aria-hidden="true"></i> Process Claims</a>
                             </li>
                         }
+                        else if (User.IsInRole("HR Manager"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HR" asp-action="Dashboard"><i class="fa-solid fa-chart-simple"></i>  HR Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HR" asp-action="ProcessPayments"><i class="fa fa-money" aria-hidden="true"></i> Process Payments</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="HR" asp-action="GenerateReport"><i class="fa fa-area-chart" aria-hidden="true"></i> Generate Reports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="ManageUsers" asp-action="Index"><i class="fa fa-users" aria-hidden="true"></i> Manage Users</a>
+                            </li>
+                        }
                     </ul>
                 </div>
                 <div class="navbar-nav ms-auto p-4 p-lg-0">
@@ -109,7 +124,7 @@
 
     <footer style="background-color: #fff;" class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - ST10251759_PROG6212_POE - Cameron Chetty - PROG6212 - POE - PART 2 - CLAIM STREAM
+            &copy; 2024 - ST10251759_PROG6212_POE - Cameron Chetty - PROG6212 - POE - PART 3 - CLAIM STREAM
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

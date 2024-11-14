@@ -6,9 +6,11 @@ using ST10251759_PROG6212_POE.Data;
 using ST10251759_PROG6212_POE.Models;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ST10251759_PROG6212_POE.Controllers
 {
+    [Authorize(Roles = "HR Manager")]
     public class HRController : Controller
     {
         private readonly Prog6212DbContext _context;

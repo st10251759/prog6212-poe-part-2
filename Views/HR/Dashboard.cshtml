@@ -1,7 +1,7 @@
 ﻿@model ST10251759_PROG6212_POE.Models.DashboardViewModel
 
 <div class="container-dashboard">
-    <h1>HR Dashboard</h1>
+    <h1 style="color:#fff;">HR Dashboard</h1>
 
     <!-- Claims Processed Section -->
     <div class="dashboard-section">
@@ -50,10 +50,22 @@
         <div class="dashboard-card">
             <h2>Reports</h2>
             <p>Generate detailed reports on claims and payments.</p>
-            <a href="#" class="btn-reports">View Reports</a>
+            <a href="/Hr/GenerateReport" class="btn-reports"><i class="fa fa-bar-chart" aria-hidden="true"></i> View Reports</a>
+        </div>
+    </div>
+
+    <!-- Manaage Users Section -->
+    <div class="dashboard-section">
+        <div class="dashboard-card">
+            <h2>Manage Users</h2>
+            <p>Manage List of users and maintian access levels</p>
+            <a href="/ManageUsers/Index" class="btn-reports"><i class="fa fa-users" aria-hidden="true"></i> View Users</a>
         </div>
     </div>
 </div>
+
+
+
 
 <!-- Add your styles here -->
 <style>

@@ -31,6 +31,10 @@
             }
         </tbody>
     </table>
+    @if (!Model.Claims.Any())
+    {
+        <p>No pending payments to review at this time.</p>
+    }
 
     <div class="summary">
         <h2>Payment Summary</h2>

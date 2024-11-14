@@ -8,7 +8,7 @@ using ST10251759_PROG6212_POE.Models;
 
 namespace ST10251759_PROG6212_POE.Controllers
 {
-    //[Authorize(Roles = "HR Manager")]
+    [Authorize(Roles = "HR Manager")]
     public class ManageUsersController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;

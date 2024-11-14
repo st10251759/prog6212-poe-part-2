@@ -142,6 +142,10 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
                         {
                             return LocalRedirect(Url.Content("~/DefaultUser/Index"));
                         }
+                        else if (roles.Contains("HR Manager"))
+                        {
+                            return LocalRedirect(Url.Content("~/Hr/Dashboard"));
+                        }
                     }
 
                     return LocalRedirect(returnUrl);

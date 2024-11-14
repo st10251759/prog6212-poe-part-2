@@ -32,7 +32,7 @@
             </select>
         </div>
 
-        <button type="submit" class="btn-submit">Generate Report</button>
+        <button type="submit" class="btn-submit"><i class="fa fa-plus-circle" aria-hidden="true"></i> Generate Report</button>
     </form>
 
     <hr />
@@ -61,7 +61,7 @@
                         <td>@report.EndDate.ToShortDateString()</td>
                         <td>
                             <a href="@Url.Content("~/" + report.FilePath)" target="_blank" class="link-view-report">
-                                View Report
+                                <i class="fa fa-download" aria-hidden="true"></i> View Report
                             </a>
                         </td>
                     </tr>
@@ -154,7 +154,9 @@
     }
 
     .btn-submit:hover {
-        background-color: #333333;
+        background-color: #fff;
+            color: #03041c;
+            border: 1px solid #03041c;
     }
 
     /* Table Styling */
@@ -181,12 +183,12 @@
     /* Link Styling */
     .link-view-report {
         text-decoration: none;
-        color: #007bff;
+        color: #03041c;
         transition: color 0.3s;
     }
 
     .link-view-report:hover {
-        color: #0056b3;
+        color: #212529;
         text-decoration: underline;
     }
 
