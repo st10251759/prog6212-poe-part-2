@@ -51,7 +51,7 @@ The following files are uploaded into this repository:
 
 ### Sprint Part 3 - Final Application Build
 **Part 3: Application Enhancement (Automation)**
-For the final build, enhancements were made to streamline the claim submission, verification, and payment processes, with new roles and automated workflows for a smoother user experience.
+For the final build, enhancements were made to streamline the claim submission, verification, and payment processes, with new roles and automated workflows for a smoother user experience. I also added fluenet validation when users register.
 
 - **Lecturer View: Claim Submission Automation**
   - Added functionality to auto-calculate final payment based on hours worked and hourly rate.
@@ -166,6 +166,16 @@ For the final build, enhancements were made to streamline the claim submission, 
   - Author: Code A Future
   - Link: [ManageUsers](https://www.youtube.com/watch?v=WIUI_dLZpgs)
   - Date Accessed: 14 Novemeber 2024
+
+- **Fluent Validation Logic:**
+  - Author: FluentValidation
+  - Link: [FluentValidation](https://docs.fluentvalidation.net/en/latest/index.html)
+  - Date Accessed: 15 Novemeber 2024
+ 
+- **Regular Expression Language:**
+  - Author: Microsoft
+  - Link: [RegualrExpressionC#](https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference)
+  - Date Accessed: 15 Novemeber 2024
 
 ---
 
