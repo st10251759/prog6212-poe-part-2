@@ -42,6 +42,11 @@ namespace ST10251759_PROG6212_POE.Models // Defines the namespace for the UserVi
         // 'LastName' is a string that represents the user's family name or surname
         public string LastName { get; set; }
 
+        // Property to store the phonenumber of the user
+        // 'PhoneNumbe' is a string that represents the user's first or given name
+        public string PhoneNumber { get; set; }
+        
+
         // Property to store the email address of the user
         // 'Email' is a string representing the user's email, which can serve as a unique identifier for login purposes
         public string Email { get; set; }

@@ -73,6 +73,11 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
+            [Phone]
+            [Display(Name = "Phone Number")]
+            public string PhoneNumber { get; set; } // New field for PhoneNumber
+
+            [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
             [DataType(DataType.Password)]
             [Display(Name = "Password")]
@@ -107,14 +112,13 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
 
                 user.Firstname = Input.Firstname;
                 user.Lastname = Input.Lastname;
+                user.PhoneNumber = Input.PhoneNumber; // Set the PhoneNumber property
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-
-                    // Assign the 'default' role to the user instead of the selected role
                     await _userManager.AddToRoleAsync(user, "Default");
 
                     var userId = await _userManager.GetUserIdAsync(user);
@@ -147,6 +151,7 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
 
             return Page();
         }
+
 
         private ApplicationUser CreateUser()
         {

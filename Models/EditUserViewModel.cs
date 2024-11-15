@@ -44,6 +44,11 @@ namespace ST10251759_PROG6212_POE.Models // Defining the namespace for the proje
         // Used for displaying or updating the last name associated with a user account
         public string LastName { get; set; }
 
+        // Property to store the phonenumber of the user
+        // 'PhoneNumbe' is a string that represents the user's first or given name
+        public string PhoneNumber { get; set; }
+
+
         // Property to store the email address of the user
         // Email serves as a unique identifier for users, providing an easy-to-recognize, human-readable value for display
         public string Email { get; set; }

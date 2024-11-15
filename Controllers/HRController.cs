@@ -211,6 +211,9 @@ namespace ST10251759_PROG6212_POE.Controllers
             var longestHoursWorked = claims.Max(c => c.HoursWorked);  // The maximum number of hours worked in the claims.
             var highestHourlyRate = claims.Max(c => c.HourlyRate);  // The highest hourly rate found in the claims.
             var totalPayments = claims.Sum(c => c.TotalAmount);  // Total sum of payments made in the claims.
+            var totalpendingPayments = claims.Where(c => c.PaymentStatus == "Processing").Sum(c => c.TotalAmount); // Payments for claims still processing.
+            var totalcompletedPayments = claims.Where(c => c.PaymentStatus == "Paid").Sum(c => c.TotalAmount); // Payments that have been completed.
+
             var processingPayments = claims.Count(c => c.PaymentStatus == "Processing");  // Number of claims with "Processing" payment status.
             var completedPayments = claims.Count(c => c.PaymentStatus == "Paid");  // Number of claims with "Paid" payment status.
 
@@ -264,6 +267,8 @@ namespace ST10251759_PROG6212_POE.Controllers
                 if (reportType == "payments")
                 {
                     document.Add(new Paragraph($"Total Payments: {totalPayments:C}"));
+                    document.Add(new Paragraph($"Total Pending Payments: {totalpendingPayments:C}"));
+                    document.Add(new Paragraph($"Total Completed Payments: {totalcompletedPayments:C}"));
                     document.Add(new Paragraph($"Processing Payments: {processingPayments}"));
                     document.Add(new Paragraph($"Completed Payments: {completedPayments}"));
                 }

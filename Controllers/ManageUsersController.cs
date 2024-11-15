@@ -62,7 +62,8 @@ namespace ST10251759_PROG6212_POE.Controllers
                 .Select(user => new UserViewModel
                 {
                     Id = user.Id, // Mapping user Id to the view model
-                    Email = user.Email // Mapping user Email to the view model
+                    Email = user.Email, // Mapping user Email to the view model
+                    PhoneNumber = user.PhoneNumber  //Mapping user Phone Number to view model
                 })
                 .ToListAsync(); // Converts the IQueryable result into a list asynchronously
 
@@ -95,6 +96,7 @@ namespace ST10251759_PROG6212_POE.Controllers
             {
                 Id = user.Id, // User Id
                 Email = user.Email, // User Email
+                PhoneNumber = user.PhoneNumber, // User PhoneNumber
                 Role = userRole.FirstOrDefault(), // The user’s current role (if any)
                 Roles = roles // List of all roles available in the system
             };
@@ -117,6 +119,9 @@ namespace ST10251759_PROG6212_POE.Controllers
 
             // Add the new selected role from the model
             await _userManager.AddToRoleAsync(user, model.Role); // Assign the new role to the user
+
+            user.PhoneNumber = model.PhoneNumber; // Update PhoneNumber
+            await _userManager.UpdateAsync(user); // Save changes
 
             return RedirectToAction(nameof(Index)); // After updating, redirect to the Index action to display the updated user list
         }
