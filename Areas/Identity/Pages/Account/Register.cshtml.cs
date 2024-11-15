@@ -1,6 +1,34 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
+/*
+ --------------------------------Student Information----------------------------------
+ STUDENT NO.: ST10251759
+ Name: Cameron Chetty
+ Course: BCAD Year 2
+ Module: Programming 2B
+ Module Code: PROG6212
+ Assessment: Portfolio of Evidence (POE) Part 3
+ Github repo link: https://github.com/st10251759/prog6212-poe-part-2
+ --------------------------------Student Information----------------------------------
+
+ ==============================Code Attribution==================================
+
+ Fluent Validation Logic
+ Author: FluentValidation
+ Link: https://docs.fluentvalidation.net/en/latest/index.html
+ Date Accessed: 15 Novemeber 2024
+
+ Regular Expression Language
+ Author: Microsoft
+ Link: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference
+ Date Accessed: 15 Novemeber 2024
+
+ ==============================Code Attribution==================================
+
+ */
+
+
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +38,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -59,33 +88,11 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [Display(Name = "First Name")]
             public string Firstname { get; set; }
-
-            [Required]
-            [Display(Name = "Last Name")]
             public string Lastname { get; set; }
-
-            [Required]
-            [EmailAddress]
-            [Display(Name = "Email")]
             public string Email { get; set; }
-
-            [Required]
-            [Phone]
-            [Display(Name = "Phone Number")]
-            public string PhoneNumber { get; set; } // New field for PhoneNumber
-
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
-            [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            public string PhoneNumber { get; set; }
             public string Password { get; set; }
-
-            [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
             // Remove the Role field from the model
@@ -175,5 +182,51 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
             return (IUserEmailStore<IdentityUser>)_userStore;
         }
     }
+
+    // RegisterValidator is a class that defines the validation rules for user registration. - used fluent balidation
+    // It inherits from AbstractValidator<RegisterModel.InputModel>, meaning it will be used to validate the InputModel class from the RegisterModel.
+    public class RegisterValidator : AbstractValidator<RegisterModel.InputModel>
+    {
+        // The constructor of RegisterValidator where the validation rules are defined
+        public RegisterValidator()
+        {
+            // Define validation rules for the "Firstname" property of the RegisterModel.InputModel.
+            // Ensures that the Firstname is not empty and does not exceed 50 characters.
+            RuleFor(x => x.Firstname)
+                .NotEmpty().WithMessage("First Name is required.") // Firstname must not be empty
+                .MaximumLength(50).WithMessage("First Name cannot exceed 50 characters."); // Firstname must not exceed 50 characters
+
+            // Define validation rules for the "Lastname" property of the RegisterModel.InputModel.
+            // Ensures that the Lastname is not empty and does not exceed 50 characters.
+            RuleFor(x => x.Lastname)
+                .NotEmpty().WithMessage("Last Name is required.") // Lastname must not be empty
+                .MaximumLength(50).WithMessage("Last Name cannot exceed 50 characters."); // Lastname must not exceed 50 characters
+
+            // Define validation rules for the "Email" property of the RegisterModel.InputModel.
+            // Ensures that the Email is not empty and follows a valid email format.
+            RuleFor(x => x.Email)
+                .NotEmpty().WithMessage("Email is required.") // Email must not be empty
+                .EmailAddress().WithMessage("Invalid Email Address."); // Email must match a valid email address format
+
+            // Define validation rules for the "PhoneNumber" property of the RegisterModel.InputModel.
+            // Ensures that the PhoneNumber is not empty and matches a specific pattern (South African phone format in this case).
+            RuleFor(x => x.PhoneNumber)
+                .NotEmpty().WithMessage("Phone Number is required.") // PhoneNumber must not be empty
+                .Matches(@"^\+27\d{9}$").WithMessage("Phone Number must be in the format +27123456789."); // Validates the phone number with regex to match a South African phone format
+
+            // Define validation rules for the "Password" property of the RegisterModel.InputModel.
+            // Ensures that the Password is not empty and has a minimum length of 6 characters.
+            RuleFor(x => x.Password)
+                .NotEmpty().WithMessage("Password is required.") // Password must not be empty
+                .MinimumLength(6).WithMessage("Your password length must be at least 6."); // Password must be at least 6 characters long
+
+            // Define validation rules for the "ConfirmPassword" property of the RegisterModel.InputModel.
+            // Ensures that the ConfirmPassword matches the Password field.
+            RuleFor(x => x.ConfirmPassword)
+                .Equal(x => x.Password).WithMessage("Passwords do not match."); // ConfirmPassword must be equal to Password
+        }
+    }
+
+
 
 }

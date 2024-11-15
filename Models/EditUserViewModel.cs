@@ -16,14 +16,16 @@
  Link: https://github.com/fb-shaik/PROG6212-Group1-2024/tree/main/TaskManager_Attributes_demo/TaskManager_Attributes_demo
  Date Accessed: 11 October 2024
 
- MVC APP
- Author: Fatima Shaik
- Link: https://github.com/fb-shaik/PROG6212-Group1-2024/blob/main/EmployeeLeaveManagement_G1.zip
- Date Accessed: 11 October 2024
+ Regular Expression Language
+ Author: Microsoft
+ Link: https://learn.microsoft.com/en-us/dotnet/standard/base-types/regular-expression-language-quick-reference
+ Date Accessed: 15 Novemeber 2024
 
  ==============================Code Attribution==================================
 
  */
+
+using System.ComponentModel.DataAnnotations;
 
 namespace ST10251759_PROG6212_POE.Models // Defining the namespace for the project's model classes
 {
@@ -46,6 +48,7 @@ namespace ST10251759_PROG6212_POE.Models // Defining the namespace for the proje
 
         // Property to store the phonenumber of the user
         // 'PhoneNumbe' is a string that represents the user's first or given name
+        [RegularExpression(@"^\+27\d{9}$", ErrorMessage = "Phone number must be in the format +27123456789")]
         public string PhoneNumber { get; set; }
 
 

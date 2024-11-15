@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using ST10251759_PROG6212_POE.Data;
 using Microsoft.AspNetCore.Identity;
+using FluentValidation.AspNetCore;
+using ST10251759_PROG6212_POE.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,15 @@ builder.Services.AddDbContext<Prog6212DbContext>(options =>
 builder.Services.AddDefaultIdentity<IdentityUser>().AddDefaultTokenProviders()
                .AddRoles<IdentityRole>()
                .AddEntityFrameworkStores<Prog6212DbContext>();
+
+// Add FluentValidation
+builder.Services.AddControllersWithViews()
+    .AddFluentValidation(config =>
+    {
+        config.RegisterValidatorsFromAssemblyContaining<Program>(); // Automatically register all validators in the project
+
+    });
+
 
 var app = builder.Build();
 
