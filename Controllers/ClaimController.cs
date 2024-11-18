@@ -85,116 +85,136 @@ namespace ST10251759_PROG6212_POE.Controllers // Defining the namespace for orga
             return View();
         }
 
-        // POST: Claim/Create - Handles form submissions to create a new claim.
-        [HttpPost] // Specifies that this action only handles POST requests.
-        [ValidateAntiForgeryToken] // Helps prevent Cross-Site Request Forgery (CSRF) attacks by validating the anti-forgery token.
+        // This is an HTTP POST method to create a new claim
+        [HttpPost]
+        // The [ValidateAntiForgeryToken] attribute ensures that requests are secure by verifying the token in the form to protect against CSRF (Cross-Site Request Forgery) attacks.
+        [ValidateAntiForgeryToken]
+        // The 'Create' method accepts a ClaimViewModel object 'model' containing data from the form submitted by the user
         public async Task<IActionResult> Create(ClaimViewModel model)
         {
-            // Checking if the model is valid (i.e., if all required fields are filled out and satisfy validation rules).
+            // First, check if the model is valid, meaning the data submitted meets all required validation rules
             if (!ModelState.IsValid)
             {
-                // If the model is not valid, re-display the form with validation messages.
+                // If not valid, return the view with the model to show validation errors to the user
                 return View(model);
             }
 
-            // Validating that the date range is within a single month and does not exceed 31 days.
-            if ((model.EndDate - model.StartDate).Days > 32 || model.StartDate.Month != model.EndDate.Month)
+            // Validate the date range: the claim's start and end date must be within the same month and no more than 31 days apart
+            if ((model.EndDate - model.StartDate).Days > 31 || model.StartDate.Month != model.EndDate.Month)
             {
+                // Add a model error with a specific message if the date range is invalid
                 ModelState.AddModelError("", "The date range must be within one month and cannot exceed 31 days.");
-                return View(model); // Returning the form view with an error message if validation fails.
+                // Return the view with the validation error message
+                return View(model);
             }
 
-            // Checking if the claim is for the current or previous month only.
+            // Validate that the claim is for the current or previous month
             var currentDate = DateTime.Now;
-            var validMonths = new[] { currentDate.Month, currentDate.AddMonths(-1).Month }; // Array of valid months.
+            // Define valid months: current month and the previous month
+            var validMonths = new[] { currentDate.Month, currentDate.AddMonths(-1).Month };
+            // Check if the claim's start and end dates are within the valid months
             if (!validMonths.Contains(model.StartDate.Month) || !validMonths.Contains(model.EndDate.Month))
             {
+                // If not, add a model error message
                 ModelState.AddModelError("", "Claims can only be submitted for the current or previous month.");
-                return View(model); // Returning the form with an error message if the claim date is outside the valid range.
+                return View(model);
             }
 
-            // Checking if a claim has already been submitted for the specified month by the current user.
-            var user = await _userManager.GetUserAsync(User); // Retrieving the logged-in user.
-            bool claimExists = _context.Claims.Any(c =>
-                c.ApplicationUserId == user.Id &&
-                c.StartDate.Month == model.StartDate.Month &&
-                c.StartDate.Year == model.StartDate.Year);
+            // Retrieve the logged-in user from the UserManager
+            var user = await _userManager.GetUserAsync(User);
 
-            if (claimExists)
+            // Check if the user has already submitted a claim for the same month and year that is still pending or approved
+            bool existingClaim = _context.Claims.Any(c =>
+                c.ApplicationUserId == user.Id && // Claims associated with the logged-in user
+                c.StartDate.Month == model.StartDate.Month && // Claims within the same month
+                c.StartDate.Year == model.StartDate.Year && // Claims within the same year
+                (c.Status == "Pending" || c.Status == "Approved by Manager" || c.Status == "Approved by Coordinator") // Claims that are not rejected
+            );
+
+            // If an existing claim is found, add an error and return the view
+            if (existingClaim)
             {
-                ModelState.AddModelError("", "You have already submitted a claim for this month."); // Error if duplicate.
-                ViewData["ClaimExists"] = true; // Setting a flag for frontend (e.g., jQuery) handling.
-                return View(model); // Returning the form with an error message.
+                ModelState.AddModelError("", "You have already submitted a claim for this month, and it is either pending or approved.");
+                ViewData["ClaimExists"] = existingClaim; // Set a flag to indicate the existence of a claim
+                return View(model);
             }
 
-            // Validating that at least one supporting document is attached.
+            // Check if the supporting documents are attached to the claim
             if (model.SupportingDocuments == null || model.SupportingDocuments.Count == 0)
             {
+                // If no documents are attached, add a validation error
                 ModelState.AddModelError("", "At least one supporting document must be attached.");
-                return View(model); // Returning the form if no documents are attached.
+                return View(model);
             }
 
-            // Checking if each document meets file criteria (PDF format and under 15 MB).
-            bool isInvalidFile = false;
+            // Loop through each file in the supporting documents to validate them
             foreach (var file in model.SupportingDocuments)
             {
+                // If the document is invalid (not PDF or exceeds size limit), add a validation error
                 if (!IsValidDocument(file))
                 {
-                    isInvalidFile = true;
                     ModelState.AddModelError("", "Only PDF files under 15 MB are allowed.");
-                    return View(model); // Returning form with error if any file is invalid.
+                    return View(model);
                 }
             }
 
-            if (!isInvalidFile)
+            // Create a new claim object with the data from the model
+            var claim = new Claim
             {
-                // Creating a new Claim object with the values provided in the form.
-                var claim = new Claim
+                HoursWorked = model.HoursWorked, // Set the hours worked from the model
+                HourlyRate = model.HourlyRate, // Set the hourly rate from the model
+                Notes = model.Notes, // Set any additional notes from the model
+                DateSubmitted = DateTime.Now, // Set the current date as the submission date
+                ApplicationUserId = user.Id, // Link the claim to the logged-in user
+                TotalAmount = model.HourlyRate * model.HoursWorked, // Calculate the total amount from hours worked and hourly rate
+                StartDate = model.StartDate, // Set the claim's start date
+                EndDate = model.EndDate // Set the claim's end date
+            };
+
+            // Add the newly created claim to the context and save changes asynchronously
+            _context.Claims.Add(claim);
+            await _context.SaveChangesAsync();
+
+            // Define the path to save the supporting documents
+            var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
+            foreach (var file in model.SupportingDocuments)
+            {
+                // Generate a unique file name using a GUID and the original file name
+                var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName); // Define the full file path
+
+                // Create the directory for uploads if it doesn't already exist
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Save the file asynchronously to the specified file path
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    HoursWorked = model.HoursWorked,
-                    HourlyRate = model.HourlyRate,
-                    Notes = model.Notes,
-                    DateSubmitted = DateTime.Now, // Setting the current date as submission date.
-                    ApplicationUserId = user.Id, // Linking claim to current user.
-                    TotalAmount = model.HourlyRate * model.HoursWorked, // Calculating the total amount for the claim.
-                    StartDate = model.StartDate,
-                    EndDate = model.EndDate
+                    await file.CopyToAsync(fileStream);
+                }
+
+                // Create a new document record linked to the claim and save the file path and document name
+                var document = new Document
+                {
+                    ClaimId = claim.ClaimId, // Link the document to the created claim
+                    DocumentName = uniqueFileName, // Store the unique file name
+                    FilePath = filePath // Store the file path
                 };
 
-                _context.Claims.Add(claim); // Adding the new claim to the database context.
-                await _context.SaveChangesAsync(); // Saving the claim to the database asynchronously.
-
-                // Setting up the file upload folder for saving supporting documents.
-                var uploadsFolder = Path.Combine(_environment.WebRootPath, "uploads");
-                foreach (var file in model.SupportingDocuments)
-                {
-                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName; // Generating a unique file name.
-                    var filePath = Path.Combine(uploadsFolder, uniqueFileName); // Full path for saving the file.
-                    Directory.CreateDirectory(uploadsFolder); // Ensuring that the upload folder exists.
-
-                    using (var fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream); // Copying the file to the server.
-                    }
-
-                    // Creating a new Document object to link the file to the claim.
-                    var document = new Document
-                    {
-                        ClaimId = claim.ClaimId, // Linking document to the created claim.
-                        DocumentName = uniqueFileName, // Storing the generated file name.
-                        FilePath = filePath // Storing the file path.
-                    };
-
-                    _context.Documents.Add(document); // Adding the document record to the database.
-                }
-
-                await _context.SaveChangesAsync(); // Saving all changes (including document records) to the database.
-                TempData["SuccessMessage"] = "Claim submitted successfully!"; // Storing a success message for display.
-                return RedirectToAction("Dashboard", "Lecturer"); // Redirecting to the Lecturer's Dashboard.
+                // Add the document to the context
+                _context.Documents.Add(document);
             }
 
-            return View(model); // If file validation fails, returning the form view.
+            // Save the document records to the database
+            await _context.SaveChangesAsync();
+
+            // Set a success message to be displayed after the claim is successfully submitted
+            TempData["SuccessMessage"] = "Claim submitted successfully!";
+            // Redirect to the "Dashboard" action in the "Lecturer" controller
+            return RedirectToAction("Dashboard", "Lecturer");
         }
+
+
+
 
         // GET: Claims/Track - Displays the track claims page for the logged-in user.
         public async Task<IActionResult> TrackClaims()
