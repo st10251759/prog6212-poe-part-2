@@ -12,9 +12,10 @@ ClaimStream is a prototype web application designed to manage lecturer claims wi
    - [Sprint Part 3 - Final Application Build](#sprint-part-3-final-application-build)
 4. [Cloning the Project and Restoring the Database](#cloning-the-project-and-restoring-the-database)
 5. [Assumptions for Usage](#assumptions-for-usage)
-6. [Functionality and App Usage](#functionality-and-app-usage)
-7. [Future Requirements](#future-requirements)
-8. [Code Attribution](#code-attribution)
+6. [Lecturer Feedback](#lecturer-feedback)
+7. [Functionality and App Usage](#functionality-and-app-usage)
+8. [Future Requirements](#future-requirements)
+9. [Code Attribution](#code-attribution)
 
 ## Repository Contents
 The following files are uploaded into this repository:
@@ -97,6 +98,9 @@ For the final build, enhancements were made to streamline the claim submission, 
 
 5. **Processing of Payments:**  
    - Hr Managers will process a payment of a claim and pay with a third-party payment tool. 
+
+## Lecturer Feedback
+I received no lecturer feedback for Part 1 and Part 2, as I obtained 100% for both parts. All changes and additional features were solely added to meet the requirements for Part 3, including enhancements to claim submission automation, verification workflows, and payment processing functionality.
 
 ## Functionality and App Usage
 
