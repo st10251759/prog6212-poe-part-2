@@ -9,7 +9,7 @@ ClaimStream is a prototype web application designed to manage lecturer claims wi
 3. [Sprints](#sprints)
    - [Sprint Part 1](#sprint-part-1)
    - [Sprint Part 2](#sprint-part-2)
-   - [Sprint Part 3 - Final Application Build](#sprint-part-3-final-application-build)
+   - [Sprint Part 3 - Final Application Build](#sprint-part-3)
 4. [Cloning the Project and Restoring the Database](#cloning-the-project-and-restoring-the-database)
 5. [Assumptions for Usage](#assumptions-for-usage)
 6. [Lecturer Feedback](#lecturer-feedback)
@@ -18,11 +18,28 @@ ClaimStream is a prototype web application designed to manage lecturer claims wi
 9. [Code Attribution](#code-attribution)
 
 ## Repository Contents
+
 The following files are uploaded into this repository:
-- **ST10251759_PROG6212_POE_Tests.zip:** Unit Tests Project with 13 tests covering core application functionalities.
-- **Prog6212_DB.bak:** SQL Server Database Backup of the local DB.
-- **ST10251759 - CAMERON CHETTY - PROG6212 - POE - Final.pdf:** Submission document with screenshots, code samples, and code attribution.
-- **ST10251759_PROG6212_POE.sln:** Solution file containing the MVC application code and structure.
+
+- **ST10251759_PROG6212_POE_Tests.zip**  
+  This is the Unit Tests Project containing 12 unit tests to validate the functionality of the application. The tests ensure accurate form submission, claim processing, and user interaction.
+
+- **Prog6212_DB.bak**  
+  This is the SQL Server Management Studio (SSMS) Database Backup of the local database used in the application. It includes all tables, relationships, and seeded data required for testing the application.
+
+- **ST10251759 - CAMERON CHETTY - PROG6212 - POE - Final.pdf**  
+  This is the final submission document. It includes submission information, screenshots of the app running locally, code snippets, and code attribution details.
+
+- **ST10251759 - PROG6212 - POE PowerPoint Presentation.pptx**  
+  A PowerPoint presentation showcasing how the application adds value to the Contract Monthly Claim System (CMCS). It outlines core features and provides an overview of the app's development process.
+
+- **YouTube Presentation Link**  
+  [Watch the presentation here](https://youtu.be/JtpHDXJFdgs).  
+  This video provides a demonstration of the application in action, alongside an explanation of its features and workflows.
+
+- **ST10251759_PROG6212_POE.sln**  
+  This is the Visual Studio solution file for the MVC application. It includes all associated folders and files, such as controllers, views, models, and configuration files necessary for building and running the project.
+
 
 ## Sprints
 
@@ -50,7 +67,7 @@ The following files are uploaded into this repository:
   - **Claim Status Tracking:** Status updates for Pending, Approved, and Rejected.
   - **Unit Testing:** Tests for claim submission and file validation.
 
-### Sprint Part 3 - Final Application Build
+### Sprint Part 3
 **Part 3: Application Enhancement (Automation)**
 For the final build, enhancements were made to streamline the claim submission, verification, and payment processes, with new roles and automated workflows for a smoother user experience. I also added fluenet validation when users register.
 
