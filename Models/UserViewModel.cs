@@ -42,6 +42,12 @@ namespace ST10251759_PROG6212_POE.Models // Defines the namespace for the UserVi
         // 'LastName' is a string that represents the user's family name or surname
         public string LastName { get; set; }
 
+        public string Faculty { get; set; } // New Faculty property to store faculty user belongs to e.g Faculty of IT, Faculty of Law
+
+        public string IDNumber { get; set; } //New Proptery for ID Number
+
+        public string HomeAddress { get; set; } //New Property for HomeAdress
+
         // Property to store the phonenumber of the user
         // 'PhoneNumbe' is a string that represents the user's first or given name
         public string PhoneNumber { get; set; }

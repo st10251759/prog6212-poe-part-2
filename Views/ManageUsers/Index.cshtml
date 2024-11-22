@@ -8,6 +8,9 @@
             <tr>
                 <th>Email</th>
                 <th>Phone Number</th>
+                <th>ID Number</th>
+                <th>Home Address</th>
+                <th>Faculty</th>
                 <th>Role</th>
                 <th>Actions</th>
             </tr>
@@ -18,6 +21,9 @@
                 <tr>
                     <td>@user.Email</td>
                     <td>@user.PhoneNumber</td>
+                    <td>@user.IDNumber</td>
+                    <td>@user.HomeAddress</td>
+                    <td>@user.Faculty</td>
                     <td>@user.Role</td>
                     <td>
                         <a asp-action="Edit" asp-route-id="@user.Id" class="action-link">
@@ -36,6 +42,10 @@
 </div>
 
 <style>
+    .container{
+        max-width: 1800px;
+    }
+
     body {
         font-family: Arial, sans-serif;
         background: url('/images/temple3.jpg') no-repeat center center fixed;
@@ -48,7 +58,7 @@
     .container-dashboard {
         margin: 6rem auto;
         width: 100%;
-        max-width: 1300px;
+        max-width: 1800px !important;
         padding: 20px;
         background-color: #fff;
         border-radius: 10px;

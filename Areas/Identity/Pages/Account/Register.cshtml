@@ -37,7 +37,25 @@
                     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
                 </div>
 
+                <!-- New Field for ID Number -->
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.IDNumber" class="form-control" placeholder="ID Number" />
+                    <label asp-for="Input.IDNumber">ID Number</label>
+                    <span asp-validation-for="Input.IDNumber" class="text-danger"></span>
+                </div>
 
+                <!-- New Field for Home Address -->
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.HomeAddress" class="form-control" placeholder="Home Address" />
+                    <label asp-for="Input.HomeAddress">Home Address</label>
+                    <span asp-validation-for="Input.HomeAddress" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Faculty" class="form-control" placeholder="Faculty" />
+                    <label asp-for="Input.Faculty">Faculty</label>
+                    <span asp-validation-for="Input.Faculty" class="text-danger"></span>
+                </div>
 
                 <div class="form-floating mb-3">
                     <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />

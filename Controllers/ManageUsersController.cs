@@ -57,15 +57,19 @@ namespace ST10251759_PROG6212_POE.Controllers
         // Action to display a list of users with their basic details
         public async Task<IActionResult> Index()
         {
-            // Fetches all users asynchronously from the UserManager and maps them to a UserViewModel containing user id and email
+            // Fetch all users and map to UserViewModel
             var users = await _userManager.Users
+                .OfType<ApplicationUser>() // Cast to ApplicationUser
                 .Select(user => new UserViewModel
                 {
-                    Id = user.Id, // Mapping user Id to the view model
-                    Email = user.Email, // Mapping user Email to the view model
-                    PhoneNumber = user.PhoneNumber  //Mapping user Phone Number to view model
+                    Id = user.Id, // Mapping user Id
+                    Email = user.Email, // Mapping user Email
+                    PhoneNumber = user.PhoneNumber, // Mapping user Phone Number
+                    Faculty = user.Faculty, // Mapping Faculty from ApplicationUser
+                    IDNumber = user.IDNumber,
+                    HomeAddress = user.HomeAddress
                 })
-                .ToListAsync(); // Converts the IQueryable result into a list asynchronously
+                .ToListAsync();
 
             // For each user, fetch their roles asynchronously and assign the first role (if exists) to the view model
             foreach (var user in users)
@@ -97,6 +101,9 @@ namespace ST10251759_PROG6212_POE.Controllers
                 Id = user.Id, // User Id
                 Email = user.Email, // User Email
                 PhoneNumber = user.PhoneNumber, // User PhoneNumber
+                Faculty = (user as ApplicationUser)?.Faculty, //Faculty user belongs to
+                HomeAddress = (user as ApplicationUser)?.HomeAddress,
+                IDNumber = (user as ApplicationUser)?.IDNumber,
                 Role = userRole.FirstOrDefault(), // The user’s current role (if any)
                 Roles = roles // List of all roles available in the system
             };
@@ -121,6 +128,13 @@ namespace ST10251759_PROG6212_POE.Controllers
             await _userManager.AddToRoleAsync(user, model.Role); // Assign the new role to the user
 
             user.PhoneNumber = model.PhoneNumber; // Update PhoneNumber
+            if (user is ApplicationUser appUser)
+            {
+                appUser.Faculty = model.Faculty; // Update Faculty
+                appUser.IDNumber = model.IDNumber; // Update IDNumber
+                appUser.HomeAddress = model.HomeAddress; // Update HomeAddress
+            }
+
             await _userManager.UpdateAsync(user); // Save changes
 
             return RedirectToAction(nameof(Index)); // After updating, redirect to the Index action to display the updated user list

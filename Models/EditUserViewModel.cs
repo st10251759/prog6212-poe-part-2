@@ -46,10 +46,25 @@ namespace ST10251759_PROG6212_POE.Models // Defining the namespace for the proje
         // Used for displaying or updating the last name associated with a user account
         public string LastName { get; set; }
 
+        // New Faculty property to store faculty the user belongs to
+        [Required(ErrorMessage = "Faculty is required.")] //cannot be null
+        [MaxLength(50, ErrorMessage = "Faculty cannot exceed 50 characters.")] //cannot eceed 50 characters
+        public string Faculty { get; set; } // New Faculty property to store faculty user belongs to e.g Faculty of IT, Faculty of Law
+
         // Property to store the phonenumber of the user
         // 'PhoneNumbe' is a string that represents the user's first or given name
         [RegularExpression(@"^\+27\d{9}$", ErrorMessage = "Phone number must be in the format +27123456789")]
         public string PhoneNumber { get; set; }
+
+        // Property to store the idnumber of the user
+        [Required(ErrorMessage = "ID Number is required.")]
+        [RegularExpression(@"^\d{13}$", ErrorMessage = "ID Number must be 13 digits.")] //id validation - must be 13 digits length
+        public string IDNumber { get; set; }
+
+        // Property to store the home address of the user
+        [Required(ErrorMessage = "Home Address is required.")]
+        [MaxLength(200, ErrorMessage = "Home Address cannot exceed 200 characters.")]
+        public string HomeAddress { get; set; }
 
 
         // Property to store the email address of the user

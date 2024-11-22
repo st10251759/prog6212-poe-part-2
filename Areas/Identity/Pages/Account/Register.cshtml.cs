@@ -92,6 +92,9 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
             public string Lastname { get; set; }
             public string Email { get; set; }
             public string PhoneNumber { get; set; }
+            public string Faculty { get; set; }
+            public string IDNumber { get; set; }
+            public string HomeAddress { get; set; } 
             public string Password { get; set; }
             public string ConfirmPassword { get; set; }
 
@@ -120,6 +123,9 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
                 user.Firstname = Input.Firstname;
                 user.Lastname = Input.Lastname;
                 user.PhoneNumber = Input.PhoneNumber; // Set the PhoneNumber property
+                user.Faculty = Input.Faculty;
+                user.IDNumber = Input.IDNumber;
+                user.HomeAddress = Input.HomeAddress;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -224,6 +230,21 @@ namespace ST10251759_PROG6212_POE.Areas.Identity.Pages.Account
             // Ensures that the ConfirmPassword matches the Password field.
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.Password).WithMessage("Passwords do not match."); // ConfirmPassword must be equal to Password
+
+            // Validation for Faculty
+            RuleFor(x => x.Faculty)
+                .NotEmpty().WithMessage("Faculty is required.") // Faculty must not be empty
+                .MaximumLength(50).WithMessage("Faculty cannot exceed 50 characters."); // Faculty must not exceed 50 characters
+
+            // Validation for IDNumber
+            RuleFor(x => x.IDNumber)
+                .NotEmpty().WithMessage("ID Number is required.") // ID Number must not be empty
+                .Matches(@"^\d{13}$").WithMessage("ID Number must be 13 digits."); // Validate the ID Number format as 13 digits
+
+            // Validation for HomeAddress
+            RuleFor(x => x.HomeAddress)
+                .NotEmpty().WithMessage("Home Address is required.") // Home Address must not be empty
+                .MaximumLength(200).WithMessage("Home Address cannot exceed 200 characters."); // Home Address must not exceed 200 characters
         }
     }
 

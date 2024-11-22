@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ST10251759_PROG6212_POE.Data;
 
@@ -11,9 +12,11 @@ using ST10251759_PROG6212_POE.Data;
 namespace ST10251759_PROG6212_POE.Migrations
 {
     [DbContext(typeof(Prog6212DbContext))]
-    partial class Prog6212DbContextModelSnapshot : ModelSnapshot
+    [Migration("20241122082232_AddFacultyToAspNetUsers")]
+    partial class AddFacultyToAspNetUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,14 +365,6 @@ namespace ST10251759_PROG6212_POE.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Firstname")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("HomeAddress")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("IDNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
